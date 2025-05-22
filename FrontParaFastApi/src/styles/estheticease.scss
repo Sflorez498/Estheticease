@@ -1,0 +1,85 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo con imagen */
+.fondo {
+  height: 100vh;
+  background-image: url('https://cdn.forbes.com.mx/2015/10/spa-and-massage-in-shelborne-wyndham-grand-miami-beach-hotel-top.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Caja del formulario */
+.containerForm {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.containerForm h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #5a0060;
+  font-family: 'Lobster', cursive;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border-color: #b6209e;
+  outline: none;
+}
+
+/* Botón */
+button[type="submit"] {
+  padding: 0.8rem 1rem;
+  background-color: #28a745;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Lobster', cursive;
+}
+
+button[type="submit"]:hover {
+  background-color: #218838;
+}

@@ -1,0 +1,41 @@
+# Node.js / React
+node_modules/
+build/
+dist/
+.env
+.env.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.log
+*.sqlite3
+*.db
+*.sql
+.env
+.env.*
+venv/
+ENV/
+env/
+.venv/
+lib/
+lib64/
+pyvenv.cfg
+
+# Archivos temporales y de sistema
+*.bak
+*.swp
+*.swo
+*.tmp
+*.temp
