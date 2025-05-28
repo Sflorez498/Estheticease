@@ -22,11 +22,37 @@ const Home = () => {
         <ul className="navbar-links">
           <li onClick={irARegistro}>Registrarse</li>
           <li onClick={irALogin}>Iniciar Sesión</li>
+          <li onClick={() => navigate("/catalogo")}>Catálogo</li>
+          <li onClick={() => navigate("/contacto")}>Contacto</li>
+          <li onClick={() => navigate("/nosotros")}>Nosotros</li>
+          <li onClick={() => navigate("/ayuda")}>Ayuda</li>
+          <li onClick={() => navigate("/terminos")}>Términos y Condiciones</li>
+          <li onClick={() => navigate("/calendario")}>Calendario</li>
+
+
+
         </ul>
+        <div className="navbar-calendar">
+  <input
+    type="date"
+    onChange={(e) => alert(`Fecha seleccionada: ${e.target.value}`)}
+  />
+</div>
+
       </div>
 
       <header className="home-header">
         <h1>Bienvenido a Estheticease</h1>
+
+        <div className="calendario-boton">
+  <label htmlFor="fecha">Agendar una cita:</label>
+  <input
+    type="date"
+    id="fecha"
+    name="fecha"
+    onChange={(e) => alert(`Fecha seleccionada: ${e.target.value}`)}
+  />
+</div>
         
 
       </header>

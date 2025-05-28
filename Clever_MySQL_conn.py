@@ -5,7 +5,7 @@ mysqlConn = mysql.connector.connect(
     host='localhost',
     user='root',
     #password='110011Sf',  # Asegúrate de que esta es la contraseña correcta del root
-    database='Estheticease',
+    database='Estheticease1',
     port=3306
 )
 

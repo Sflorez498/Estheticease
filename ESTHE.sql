@@ -1,6 +1,6 @@
 -- Crear y usar la base de datos
-CREATE DATABASE IF NOT EXISTS Estheticease;
-USE Estheticease;
+CREATE DATABASE IF NOT EXISTS Estheticease1;
+USE Estheticease1;
 
 -- Tabla de Clientes
 DROP TABLE IF EXISTS Clientes;
