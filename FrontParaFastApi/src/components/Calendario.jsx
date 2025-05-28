@@ -8,6 +8,7 @@ const profesionales = {
   "2025-05-29": ["Lucía Méndez"],
 };
 
+
 const servicios = {
   "2025-05-28": ["Masaje relajante", "Limpieza facial"],
   "2025-05-29": ["Tratamiento corporal"],
