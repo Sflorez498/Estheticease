@@ -17,13 +17,13 @@ const Home = () => {
           <li onClick={() => navigate("/catalogo")}>Catálogo</li>
           <li onClick={() => navigate("/calendario")}>Calendario</li>
           <li onClick={() => navigate("/registro")}>Registrarse</li>
-          <li onClick={() => navigate("/login")}>Iniciar Sesión</li>
+          <li onClick={() => navigate("/login")}>Login</li>
         </ul>
       </div>
 
       {/* Hero */}
       <section className="hero" style={{
-        backgroundImage: "url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1470&q=80')",
+        backgroundImage: "url('https://i.pinimg.com/736x/4f/ac/6a/4fac6a5b2f1d11667644f8d99b498d6a.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         height: "70vh",
@@ -155,6 +155,42 @@ const Home = () => {
         </div>
       </section>
 
+      <section style={{ padding: "40px 20px", backgroundColor: "#fff", textAlign: "center" }}>
+        <h2>Suscríbete a nuestro boletín</h2>
+        <p>Recibe promociones exclusivas y consejos de belleza directamente en tu correo.</p>
+        <form style={{ marginTop: "20px" }}>
+          <input type="email" placeholder="Tu correo electrónico" style={{
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            width: "300px",
+            marginRight: "10px"
+          }} />
+          <button style={{
+            padding: "10px 20px",
+            backgroundColor: "#ff7e5f",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}>
+            Suscribirme
+          </button>
+        </form>
+      </section>
+
+      {/* Footer */}
+      <footer style={{
+        backgroundColor: "#f7c6c7",
+        padding: "20px",
+        textAlign: "center",
+        fontSize: "0.9rem"
+      }}>
+        
+      </footer>
+    
+
+
       {/* Footer con links */}
       <footer className="home-footer" style={{ textAlign: "center", padding: "20px", backgroundColor: "#333", color: "#fff" }}>
         <p>&copy; 2025 Estheticease - Todos los derechos reservados</p>
@@ -167,7 +203,11 @@ const Home = () => {
       </footer>
 
     </div>
+
+  
   );
 };
+
+
 
 export default Home;
