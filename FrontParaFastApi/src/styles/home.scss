@@ -143,3 +143,17 @@
     color:#94007e;
 }
 }
+
+
+.calendario-boton {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+
+ }
