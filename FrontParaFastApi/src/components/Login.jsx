@@ -21,11 +21,8 @@ const Login = () => {
         Contraseña: contraseña,
       });
 
-      // Si la respuesta es exitosa (status code 2xx)
       if (response.status >= 200 && response.status < 300) {
         alert('Inicio de sesión exitoso');
-        // Aquí podrías guardar el token de autenticación que el backend debería devolver
-        // Por ejemplo: localStorage.setItem('authToken', response.data.token);
         navigate('/catalogo');
       } else {
         setError(response.data?.detail || 'Error al iniciar sesión');
@@ -36,8 +33,27 @@ const Login = () => {
     }
   };
 
+  const irARegistro = () => {
+    navigate("/registro");
+  };
+
+  const irAHome = () => {
+    navigate("/");
+  };
+
   return (
     <div className="fondo">
+      {/* Barra de navegación */}
+      <div className="navbar">
+        <div className="navbar-logo" onClick={irAHome}>
+          Estheticease
+        </div>
+        <ul className="navbar-links">
+          <li onClick={irAHome}>Inicio</li>
+          <li onClick={irARegistro}>Registrarse</li>
+        </ul>
+      </div>
+
       <div className="containerForm">
         <h2>Iniciar Sesión</h2>
         {error && <p style={{ color: 'red' }}>{error}</p>}

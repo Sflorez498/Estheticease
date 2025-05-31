@@ -4,7 +4,7 @@ import mysql.connector
 mysqlConn = mysql.connector.connect(
     host='localhost',
     user='root',
-    #password='110011Sf',  # Asegúrate de que esta es la contraseña correcta del root
+    password='110011Sf',  # Asegúrate de que esta es la contraseña correcta del root
     database='Estheticease',
     port=3306
 )

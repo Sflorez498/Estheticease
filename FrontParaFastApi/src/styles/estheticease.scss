@@ -7,17 +7,57 @@ html, body {
 
 /* Fondo con imagen */
 .fondo {
-  height: 100vh;
+  min-height: 100vh;
   background-image: url('https://cdn.forbes.com.mx/2015/10/spa-and-massage-in-shelborne-wyndham-grand-miami-beach-hotel-top.jpg');
   background-size: cover;
   background-position: center;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  flex-direction: column;
+  padding: 0;
 }
 
-/* Caja del formulario */
+/* Navbar para páginas de formulario */
+.fondo .navbar {
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Lobster', cursive;
+  border-radius: 0 0 15px 15px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  margin-bottom: 2rem;
+}
+
+.fondo .navbar-logo {
+  font-size: 2rem;
+  color: #b6209e;
+  cursor: pointer;
+}
+
+.fondo .navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.fondo .navbar-links li {
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #5a0060;
+  transition: color 0.3s ease;
+}
+
+.fondo .navbar-links li:hover {
+  color: #94007e;
+}
+
+/* Contenedor del formulario */
 .containerForm {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 2rem;
@@ -25,6 +65,8 @@ html, body {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   max-width: 500px;
   width: 100%;
+  margin: 0 auto;
+  align-self: center;
 }
 
 .containerForm h2 {
