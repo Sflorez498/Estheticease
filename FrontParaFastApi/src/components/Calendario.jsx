@@ -1,23 +1,25 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "../styles/Calendario.scss"; // Asegúrate de tener estilos aquí
+import "../styles/Calendario.scss";
 
-// Importa tus imágenes aquí
-import avatarProfesional1 from "../assets/images/profesional2.avif"; // Asegúrate de tener estas imágenes
+// Imágenes de profesionales
+import avatarProfesional1 from "../assets/images/profesional2.avif";
 import avatarProfesional2 from "../assets/images/profesional1.webp";
 import avatarProfesional3 from "../assets/images/profesional3.avif";
+
+// Imágenes de servicios
 import servicioMasaje from "../assets/images/masaje.jpg";
 import servicioLimpieza from "../assets/images/limpieza.jpeg";
-import servicioCorporal from "../assets/images/corporal.jpg"; // Asegúrate de tener estas imágenes
+import servicioCorporal from "../assets/images/corporal.jpg";
 
+// Datos simulados
 const profesionales = {
   "2025-05-28": [
     { nombre: "Ana López", imagen: avatarProfesional1 },
     { nombre: "Carlos Ruiz", imagen: avatarProfesional2 },
   ],
   "2025-05-29": [{ nombre: "Lucía Méndez", imagen: avatarProfesional3 }],
-  // Puedes añadir más profesionales para otros días si lo deseas
 };
 
 const servicios = {
@@ -26,27 +28,23 @@ const servicios = {
     { nombre: "Limpieza facial", imagen: servicioLimpieza },
   ],
   "2025-05-29": [{ nombre: "Tratamiento corporal", imagen: servicioCorporal }],
-  // Puedes añadir más servicios para otros días si lo deseas
 };
 
 const Calendario = () => {
   const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
 
   const handleDateChange = (date) => {
-    setFechaSeleccionada(date.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+    const fecha = date.toISOString().split("T")[0];
+    setFechaSeleccionada(fecha);
   };
 
-  // Función para determinar las clases CSS de cada día en el calendario
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
-      const dateString = date.toISOString().split("T")[0];
-      if (profesionales[dateString] && profesionales[dateString].length > 0) {
-        return "available-day"; // Día disponible
-      } else {
-        // Para que los días sin profesionales se vean como "no disponibles"
-        // o puedes simplemente no aplicarles ninguna clase si prefieres que se vean por defecto
-        return "unavailable-day"; // Día no disponible
+      const fecha = date.toISOString().split("T")[0];
+      if (profesionales[fecha] && profesionales[fecha].length > 0) {
+        return "available-day";
       }
+      return "unavailable-day";
     }
     return null;
   };
@@ -69,11 +67,11 @@ const Calendario = () => {
                 </div>
               ))
             ) : (
-              <p>Ningún profesional disponible.</p>
+              <p>No hay profesionales disponibles.</p>
             )}
           </div>
 
-          <h4>Procesos disponibles:</h4>
+          <h4>Servicios disponibles:</h4>
           <div className="servicios-grid">
             {(servicios[fechaSeleccionada] || []).length > 0 ? (
               servicios[fechaSeleccionada].map((serv, idx) => (
@@ -83,7 +81,7 @@ const Calendario = () => {
                 </div>
               ))
             ) : (
-              <p>Sin servicios disponibles.</p>
+              <p>No hay servicios disponibles.</p>
             )}
           </div>
         </div>
