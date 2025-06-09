@@ -20,12 +20,14 @@ const FormCargo = () => {
     };
 
     try {
-      await axios.post("http://localhost:8000/clientes/", nuevoCliente);
+      const response = await axios.post("http://localhost:8000/clientes", nuevoCliente);
+      console.log("Respuesta del servidor:", response.data);
       alert("Cliente registrado correctamente");
       form.reset();
     } catch (error) {
-      alert("Error al registrar cliente");
-      console.error(error);
+      console.error("Error completo:", error);
+      const errorMessage = error.response?.data?.detail || "Error al registrar cliente";
+      alert(errorMessage);
     }
   };
 

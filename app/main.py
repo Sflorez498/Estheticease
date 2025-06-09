@@ -22,6 +22,8 @@ app = FastAPI(
 # Orígenes permitidos para CORS (frontend)
 origins = [
     "http://localhost:3000",
+    "http://localhost:5173",  # Vite development server
+    "http://localhost:8000",  # Backend
     "https://tu-frontend-en-produccion.com"
 ]
 

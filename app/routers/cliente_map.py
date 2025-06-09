@@ -18,7 +18,7 @@ class CredencialesLogin(BaseModel):
     correo: str
     contraseña: str
 
-@clienteRouter.post("/clientes/", status_code=status.HTTP_201_CREATED)
+@clienteRouter.post("/", status_code=status.HTTP_201_CREATED)
 def registrar_cliente(clientePost: ClienteDB):
     try:
         hashed_password = bcrypt.hashpw(clientePost.contraseña.encode('utf-8'), bcrypt.gensalt())
@@ -40,7 +40,7 @@ def registrar_cliente(clientePost: ClienteDB):
     except Exception as err:
         raise HTTPException(status_code=400, detail=f"Error al registrar cliente: {err}")
 
-@clienteRouter.get("/clientes/", status_code=status.HTTP_200_OK)
+@clienteRouter.get("/", status_code=status.HTTP_200_OK)
 def get_all_clients() -> List[dict]:
     try:
         cleverCursor.execute(
@@ -51,7 +51,7 @@ def get_all_clients() -> List[dict]:
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Error al obtener los clientes: {err}")
 
-@clienteRouter.get("/clientes/{id_cliente}", status_code=status.HTTP_200_OK)
+@clienteRouter.get("/{id_cliente}", status_code=status.HTTP_200_OK)
 def get_cliente_by_id(id_cliente: int) -> Optional[dict]:
     try:
         cleverCursor.execute(
@@ -66,7 +66,7 @@ def get_cliente_by_id(id_cliente: int) -> Optional[dict]:
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Error al buscar cliente: {err}")
 
-@clienteRouter.post("/login/", status_code=status.HTTP_200_OK)
+@clienteRouter.post("/login", status_code=status.HTTP_200_OK)
 def login_user(creenciales: CredencialesLogin):
     try:
         cleverCursor.execute(
@@ -86,7 +86,7 @@ def login_user(creenciales: CredencialesLogin):
         raise HTTPException(status_code=500, detail=f"Error al iniciar sesión: {err}")
 
 # Nueva ruta para eliminar un cliente
-@clienteRouter.delete("/clientes/{id_cliente}", status_code=status.HTTP_204_NO_CONTENT)
+@clienteRouter.delete("/{id_cliente}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_cliente(id_cliente: int):
     try:
         # Verificar si el cliente existe antes de intentar eliminarlo

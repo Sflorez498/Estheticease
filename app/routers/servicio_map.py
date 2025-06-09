@@ -1,35 +1,72 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from typing import List
+from database.Clever_MySQL_conn import cleverCursor, mysqlConn
+from typing import List, Optional
 
-class Servicio(BaseModel):
-    id: int
+class ServicioBase(BaseModel):
     nombre: str
     descripcion: str
     precio: float
 
+class Servicio(ServicioBase):
+    id_servicio: Optional[int] = None
+
 servicioRouter = APIRouter()
 
-servicios_db = [
-    Servicio(id=1, nombre="Corte de cabello", descripcion="Corte para hombres y mujeres", precio=15.0),
-    Servicio(id=2, nombre="Manicura", descripcion="Manicura básica", precio=10.0),
-]
-
-@servicioRouter.get("/", response_model=List[Servicio])
+@servicioRouter.get("/", status_code=status.HTTP_200_OK)
 async def listar_servicios():
-    return servicios_db
+    try:
+        cleverCursor.execute('SELECT * FROM servicios')
+        servicios = cleverCursor.fetchall()
+        return servicios
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener servicios: {e}")
 
-@servicioRouter.get("/{servicio_id}", response_model=Servicio)
+@servicioRouter.get("/{servicio_id}", status_code=status.HTTP_200_OK)
 async def obtener_servicio(servicio_id: int):
-    for servicio in servicios_db:
-        if servicio.id == servicio_id:
+    try:
+        cleverCursor.execute('SELECT * FROM servicios WHERE Id_Servicio = %s', (servicio_id,))
+        servicio = cleverCursor.fetchone()
+        if servicio:
             return servicio
-    raise HTTPException(status_code=404, detail="Servicio no encontrado")
+        raise HTTPException(status_code=404, detail="Servicio no encontrado")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al obtener servicio: {e}")
 
-@servicioRouter.post("/", response_model=Servicio, status_code=201)
-async def crear_servicio(servicio: Servicio):
-    for s in servicios_db:
-        if s.id == servicio.id:
-            raise HTTPException(status_code=400, detail="El ID del servicio ya existe")
-    servicios_db.append(servicio)
-    return servicio
+@servicioRouter.post("/", status_code=status.HTTP_201_CREATED)
+async def crear_servicio(servicio: ServicioBase):
+    try:
+        insert_query = """
+        INSERT INTO servicios (Nombre, Descripcion, Precio)
+        VALUES (%s, %s, %s)
+        """
+        values = (servicio.nombre, servicio.descripcion, servicio.precio)
+        cleverCursor.execute(insert_query, values)
+        mysqlConn.commit()
+        return {"message": "Servicio creado exitosamente"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al crear servicio: {e}")
+
+@servicioRouter.put("/{servicio_id}", status_code=status.HTTP_200_OK)
+async def actualizar_servicio(servicio_id: int, servicio: ServicioBase):
+    try:
+        update_query = """
+        UPDATE servicios 
+        SET Nombre = %s, Descripcion = %s, Precio = %s
+        WHERE Id_Servicio = %s
+        """
+        values = (servicio.nombre, servicio.descripcion, servicio.precio, servicio_id)
+        cleverCursor.execute(update_query, values)
+        mysqlConn.commit()
+        return {"message": "Servicio actualizado exitosamente"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al actualizar servicio: {e}")
+
+@servicioRouter.delete("/{servicio_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def eliminar_servicio(servicio_id: int):
+    try:
+        cleverCursor.execute('DELETE FROM servicios WHERE Id_Servicio = %s', (servicio_id,))
+        mysqlConn.commit()
+        return {"message": "Servicio eliminado exitosamente"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al eliminar servicio: {e}")

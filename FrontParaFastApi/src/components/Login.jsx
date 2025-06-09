@@ -16,14 +16,17 @@ const Login = () => {
     const contraseña = form.Contraseña.value;
 
     try {
-      const response = await axios.post('http://localhost:8000/login/', {
-        Correo: correo,
-        Contraseña: contraseña,
+      const response = await axios.post('http://localhost:8000/clientes/login', {
+        correo: correo,
+        contraseña: contraseña,
       });
 
-      if (response.status >= 200 && response.status < 300) {
+      console.log('Respuesta login:', response.data);
+      if (response.data && response.status >= 200 && response.status < 300) {
+        // Guardar el ID del usuario que viene en la respuesta
+        localStorage.setItem('userId', response.data.Id_Cliente);
         alert('Inicio de sesión exitoso');
-        navigate('/catalogo');
+        navigate('/calendario');
       } else {
         setError(response.data?.detail || 'Error al iniciar sesión');
       }

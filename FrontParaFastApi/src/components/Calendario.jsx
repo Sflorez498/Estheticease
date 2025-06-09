@@ -1,88 +1,165 @@
-import React, { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import "../styles/Calendario.scss";
+import React, { useState, useEffect } from 'react';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import format from 'date-fns/format';
+import parse from 'date-fns/parse';
+import startOfWeek from 'date-fns/startOfWeek';
+import getDay from 'date-fns/getDay';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import es from 'date-fns/locale/es';
 
-// Imágenes de profesionales
-import avatarProfesional1 from "../assets/images/profesional2.avif";
-import avatarProfesional2 from "../assets/images/profesional1.webp";
-import avatarProfesional3 from "../assets/images/profesional3.avif";
-
-// Imágenes de servicios
-import servicioMasaje from "../assets/images/masaje.jpg";
-import servicioLimpieza from "../assets/images/limpieza.jpeg";
-import servicioCorporal from "../assets/images/corporal.jpg";
-
-// Datos simulados
-const profesionales = {
-  "2025-05-28": [
-    { nombre: "Ana López", imagen: avatarProfesional1 },
-    { nombre: "Carlos Ruiz", imagen: avatarProfesional2 },
-  ],
-  "2025-05-29": [{ nombre: "Lucía Méndez", imagen: avatarProfesional3 }],
+const locales = {
+  'es': es,
 };
 
-const servicios = {
-  "2025-05-28": [
-    { nombre: "Masaje relajante", imagen: servicioMasaje },
-    { nombre: "Limpieza facial", imagen: servicioLimpieza },
-  ],
-  "2025-05-29": [{ nombre: "Tratamiento corporal", imagen: servicioCorporal }],
-};
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 const Calendario = () => {
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+  const navigate = useNavigate();
+  const [citas, setCitas] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedService, setSelectedService] = useState('');
+  const [servicios, setServicios] = useState([]);
 
-  const handleDateChange = (date) => {
-    const fecha = date.toISOString().split("T")[0];
-    setFechaSeleccionada(fecha);
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    navigate('/');
   };
 
-  const tileClassName = ({ date, view }) => {
-    if (view === "month") {
-      const fecha = date.toISOString().split("T")[0];
-      if (profesionales[fecha] && profesionales[fecha].length > 0) {
-        return "available-day";
-      }
-      return "unavailable-day";
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      navigate('/login');
+      return;
     }
-    return null;
+
+    const fetchCitas = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/citas/cliente/${userId}`);
+        console.log('Citas obtenidas:', response.data);
+        const citasFormateadas = response.data.map(cita => ({
+          title: `Cita: ${cita.servicio_nombre}`,
+          start: new Date(cita.Fecha_Cita),
+          end: new Date(cita.Fecha_Cita),
+          id: cita.Id_Cita,
+        }));
+        setCitas(citasFormateadas);
+      } catch (error) {
+        console.error('Error al cargar citas:', error);
+      }
+    };
+
+    const fetchServicios = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/servicios');
+        console.log('Servicios obtenidos:', response.data);
+        setServicios(response.data);
+      } catch (error) {
+        console.error('Error al cargar servicios:', error);
+      }
+    };
+
+    fetchCitas();
+    fetchServicios();
+  }, [navigate]);
+
+  const handleSelectSlot = (slotInfo) => {
+    setSelectedDate(slotInfo.start);
+    setShowModal(true);
+  };
+
+  const handleSubmitCita = async () => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (!userId || !selectedService || !selectedDate) {
+        alert('Por favor seleccione un servicio y una fecha');
+        return;
+      }
+
+      const nuevaCita = {
+        id_clientes: parseInt(userId),
+        id_servicio: parseInt(selectedService),
+        fecha_cita: format(selectedDate, 'yyyy-MM-dd'),
+        estado: 'Pendiente'
+      };
+
+      console.log('Enviando cita:', nuevaCita);
+      const response = await axios.post('http://localhost:8000/citas', nuevaCita);
+      console.log('Respuesta:', response.data);
+      
+      alert('Cita agendada exitosamente');
+      setShowModal(false);
+      
+      // Recargar citas
+      const citasResponse = await axios.get(`http://localhost:8000/citas/cliente/${userId}`);
+      const citasFormateadas = citasResponse.data.map(cita => ({
+        title: `Cita: ${cita.servicio_nombre}`,
+        start: new Date(cita.Fecha_Cita),
+        end: new Date(cita.Fecha_Cita),
+        id: cita.Id_Cita,
+      }));
+      setCitas(citasFormateadas);
+    } catch (error) {
+      console.error('Error al agendar cita:', error);
+      const mensaje = error.response?.data?.detail || 'Error al agendar la cita';
+      alert(mensaje);
+    }
   };
 
   return (
     <div className="calendario-container">
-      <h2>Agendar Cita</h2>
-      <Calendar onChange={handleDateChange} tileClassName={tileClassName} />
-      {fechaSeleccionada && (
-        <div className="info-cita">
-          <h3>Fecha: {fechaSeleccionada}</h3>
+      <div className="header-container">
+        <h2>Mis Citas</h2>
+        <button className="logout-button" onClick={handleLogout}>
+          Cerrar Sesión
+        </button>
+      </div>
+      <Calendar
+        localizer={localizer}
+        events={citas}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
+        onSelectSlot={handleSelectSlot}
+        selectable
+        messages={{
+          next: "Siguiente",
+          previous: "Anterior",
+          today: "Hoy",
+          month: "Mes",
+          week: "Semana",
+          day: "Día"
+        }}
+      />
 
-          <h4>Profesionales disponibles:</h4>
-          <div className="profesionales-grid">
-            {(profesionales[fechaSeleccionada] || []).length > 0 ? (
-              profesionales[fechaSeleccionada].map((prof, idx) => (
-                <div key={idx} className="profesional-card">
-                  <img src={prof.imagen} alt={prof.nombre} className="profesional-img" />
-                  <p>{prof.nombre}</p>
-                </div>
-              ))
-            ) : (
-              <p>No hay profesionales disponibles.</p>
-            )}
-          </div>
-
-          <h4>Servicios disponibles:</h4>
-          <div className="servicios-grid">
-            {(servicios[fechaSeleccionada] || []).length > 0 ? (
-              servicios[fechaSeleccionada].map((serv, idx) => (
-                <div key={idx} className="servicio-card">
-                  <img src={serv.imagen} alt={serv.nombre} className="servicio-img" />
-                  <p>{serv.nombre}</p>
-                </div>
-              ))
-            ) : (
-              <p>No hay servicios disponibles.</p>
-            )}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <h3>Agendar Nueva Cita</h3>
+            <p>Fecha seleccionada: {format(selectedDate, 'dd/MM/yyyy')}</p>
+            <select 
+              value={selectedService} 
+              onChange={(e) => setSelectedService(e.target.value)}
+            >
+              <option value="">Seleccione un servicio</option>
+              {servicios.map(servicio => (
+                <option key={servicio.Id_Servicio} value={servicio.Id_Servicio}>
+                  {servicio.Nombre} - ${servicio.Precio}
+                </option>
+              ))}
+            </select>
+            <div className="modal-buttons">
+              <button onClick={handleSubmitCita}>Confirmar</button>
+              <button onClick={() => setShowModal(false)}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
