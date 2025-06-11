@@ -1,3 +1,4 @@
+# Importamos las librerías necesarias para la API y la base de datos
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from ..database.Clever_MySQL_conn import cleverCursor, mysqlConn
@@ -5,6 +6,15 @@ import bcrypt
 from typing import List, Optional
 
 clienteRouter = APIRouter()
+
+# Clase que define el modelo de datos para un cliente
+# Cada cliente debe tener:
+# - nombre: nombre completo del cliente
+# - contacto: número de teléfono o información de contacto
+# - correo: dirección de correo electrónico
+# - contraseña: contraseña para iniciar sesión
+# - genero: género del cliente
+# - edad: edad del cliente
 
 class ClienteDB(BaseModel):
     nombre: str
@@ -18,6 +28,9 @@ class CredencialesLogin(BaseModel):
     correo: str
     contraseña: str
 
+# Ruta para registrar un nuevo cliente
+# Recibe los datos del cliente y los guarda en la base de datos
+# Retorna un mensaje de éxito si todo sale bien
 @clienteRouter.post("/", status_code=status.HTTP_201_CREATED)
 def registrar_cliente(clientePost: ClienteDB):
     try:
@@ -40,6 +53,8 @@ def registrar_cliente(clientePost: ClienteDB):
     except Exception as err:
         raise HTTPException(status_code=400, detail=f"Error al registrar cliente: {err}")
 
+# Ruta para obtener la lista de todos los clientes
+# Retorna una lista con todos los clientes registrados
 @clienteRouter.get("/", status_code=status.HTTP_200_OK)
 def get_all_clients() -> List[dict]:
     try:
@@ -51,6 +66,9 @@ def get_all_clients() -> List[dict]:
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Error al obtener los clientes: {err}")
 
+# Ruta para buscar un cliente por su ID
+# Recibe el ID del cliente y retorna sus datos
+# Si no encuentra el cliente, retorna un error 404
 @clienteRouter.get("/{id_cliente}", status_code=status.HTTP_200_OK)
 def get_cliente_by_id(id_cliente: int) -> Optional[dict]:
     try:
@@ -66,6 +84,9 @@ def get_cliente_by_id(id_cliente: int) -> Optional[dict]:
     except Exception as err:
         raise HTTPException(status_code=500, detail=f"Error al buscar cliente: {err}")
 
+# Ruta para iniciar sesión de un cliente
+# Verifica el correo y contraseña del cliente
+# Si las credenciales son correctas, permite el acceso
 @clienteRouter.post("/login", status_code=status.HTTP_200_OK)
 def login_user(creenciales: CredencialesLogin):
     try:
@@ -86,6 +107,9 @@ def login_user(creenciales: CredencialesLogin):
         raise HTTPException(status_code=500, detail=f"Error al iniciar sesión: {err}")
 
 # Nueva ruta para eliminar un cliente
+# Ruta para eliminar un cliente
+# Recibe el ID del cliente y lo elimina de la base de datos
+# Si el cliente no existe, retorna un error 404
 @clienteRouter.delete("/{id_cliente}", status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_cliente(id_cliente: int):
     try:
