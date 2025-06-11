@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from database.Clever_MySQL_conn import cleverCursor, mysqlConn
+from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn
 from typing import List, Optional
 from decimal import Decimal
 
@@ -21,9 +21,10 @@ productoRouter = APIRouter()
 async def listar_productos():
     try:
         cleverCursor.execute('''
-            SELECT * FROM productos 
-            WHERE stock > 0 
-            ORDER BY categoria, nombre
+            SELECT id_producto, nombre_producto, categoria, inventario as stock, precio, is_active 
+            FROM Productos 
+            WHERE inventario > 0 
+            ORDER BY categoria, nombre_producto
         ''')
         productos = cleverCursor.fetchall()
         return productos
@@ -34,11 +35,30 @@ async def listar_productos():
 async def productos_por_categoria(categoria: str):
     try:
         cleverCursor.execute('''
-            SELECT * FROM productos 
-            WHERE categoria = %s AND stock > 0
+            SELECT id_producto, nombre_producto, categoria, inventario as stock, precio, is_active 
+            FROM Productos 
+            WHERE categoria = %s AND inventario > 0
         ''', (categoria,))
         productos = cleverCursor.fetchall()
-        return productos
+        
+        # Formatear los productos para que coincidan con el modelo
+        productos_formateados = []
+        for producto in productos:
+            try:
+                productos_formateados.append({
+                    'id_producto': producto[0],
+                    'nombre': producto[1],
+                    'descripcion': producto[2],
+                    'precio': float(producto[3]),  # Convertir a float para JSON
+                    'stock': producto[4],
+                    'imagen': producto[5],
+                    'categoria': producto[6]
+                })
+            except Exception as e:
+                print(f"Error formateando producto: {e}")
+                continue
+        
+        return productos_formateados
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener productos: {e}")
 

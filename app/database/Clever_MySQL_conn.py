@@ -11,4 +11,3 @@ mysqlConn = mysql.connector.connect(
 
 # Crear el cursor
 cleverCursor = mysqlConn.cursor()
-

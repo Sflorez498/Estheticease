@@ -20,7 +20,7 @@ const FormCargo = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/clientes", nuevoCliente);
+      const response = await axios.post("http://localhost:8000/api/clientes", nuevoCliente);
       console.log("Respuesta del servidor:", response.data);
       alert("Cliente registrado correctamente");
       form.reset();

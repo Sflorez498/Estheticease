@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from database.Clever_MySQL_conn import cleverCursor, mysqlConn
+from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn
 from datetime import datetime
 from typing import List, Optional
 

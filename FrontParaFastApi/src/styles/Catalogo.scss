@@ -56,16 +56,23 @@
   }
   
   .producto-boton {
-    background-color: #5cb85c;
-    color: #fff;
+    background-color: #6c5ce7;
+    color: white;
     border: none;
-    padding: 0.7rem 1.2rem;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
-    transition: background-color 0.3s ease;
-  
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .cart-icon {
+      font-size: 1rem;
+    }
+
     &:hover {
-      background-color: #4cae4c;
+      background-color: #5a4ce3;
     }
   }

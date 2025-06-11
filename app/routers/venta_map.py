@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from database.Clever_MySQL_conn import cleverCursor, mysqlConn  # Asegúrate de que esta importación sea correcta
+from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn  # Asegúrate de que esta importación sea correcta
 
 # Definición del router
 ventaRouter = APIRouter()

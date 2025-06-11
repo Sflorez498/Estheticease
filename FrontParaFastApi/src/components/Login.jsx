@@ -16,7 +16,7 @@ const Login = () => {
     const contraseña = form.Contraseña.value;
 
     try {
-      const response = await axios.post('http://localhost:8000/clientes/login', {
+      const response = await axios.post('http://localhost:8000/api/clientes/login', {
         correo: correo,
         contraseña: contraseña,
       });
@@ -25,8 +25,11 @@ const Login = () => {
       if (response.data && response.status >= 200 && response.status < 300) {
         // Guardar el ID del usuario que viene en la respuesta
         localStorage.setItem('userId', response.data.Id_Cliente);
+        // Guardar el ID del usuario que viene en la respuesta
+        localStorage.setItem('userId', response.data.Id_Cliente);
+        localStorage.setItem('token', response.data.token); // Guardar el token si existe
         alert('Inicio de sesión exitoso');
-        navigate('/calendario');
+        navigate('/catalogo');
       } else {
         setError(response.data?.detail || 'Error al iniciar sesión');
       }

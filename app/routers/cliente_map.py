@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
-from database.Clever_MySQL_conn import cleverCursor, mysqlConn
+from ..database.Clever_MySQL_conn import cleverCursor, mysqlConn
 import bcrypt
 from typing import List, Optional
 
@@ -79,7 +79,7 @@ def login_user(creenciales: CredencialesLogin):
         hashed_password_from_db = user[4]  # Verifica este índice según tu tabla
         
         if bcrypt.checkpw(creenciales.contraseña.encode('utf-8'), hashed_password_from_db.encode('utf-8')):
-            return {"message": "Inicio de sesión exitoso"}
+            return {"message": "Inicio de sesión exitoso", "Id_Cliente": user[0]}
         else:
             raise HTTPException(status_code=401, detail="Contraseña incorrecta")
     except Exception as err:
