@@ -16,7 +16,7 @@ servicioRouter = APIRouter()
 @servicioRouter.get("/", status_code=status.HTTP_200_OK)
 async def listar_servicios():
     try:
-        cleverCursor.execute('SELECT * FROM servicios')
+        cleverCursor.execute('SELECT * FROM Servicios')
         servicios = cleverCursor.fetchall()
         return servicios
     except Exception as e:
@@ -25,7 +25,7 @@ async def listar_servicios():
 @servicioRouter.get("/{servicio_id}", status_code=status.HTTP_200_OK)
 async def obtener_servicio(servicio_id: int):
     try:
-        cleverCursor.execute('SELECT * FROM servicios WHERE Id_Servicio = %s', (servicio_id,))
+        cleverCursor.execute('SELECT * FROM Servicios WHERE Id_Servicio = %s', (servicio_id,))
         servicio = cleverCursor.fetchone()
         if servicio:
             return servicio
@@ -37,7 +37,7 @@ async def obtener_servicio(servicio_id: int):
 async def crear_servicio(servicio: ServicioBase):
     try:
         insert_query = """
-        INSERT INTO servicios (Nombre, Descripcion, Precio)
+        INSERT INTO Servicios (Nombre_Servicio, Descripcion, Precio)
         VALUES (%s, %s, %s)
         """
         values = (servicio.nombre, servicio.descripcion, servicio.precio)

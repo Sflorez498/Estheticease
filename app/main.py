@@ -14,6 +14,7 @@ from app.routers.dev_map import devRouter as dev_router
 from app.routers.producto_map import productoRouter as producto_router
 from app.routers.venta_map import ventaRouter as venta_router
 from app.routers.empleado_map import empleadoRouter as empleado_router
+# from app.routers.citas_router import router as citas_router
 
 # Configuración inicial de la API
 # Documentación automática disponible en /docs y /redoc
@@ -42,6 +43,7 @@ app.include_router(dev_router, prefix="/dev", tags=["Dev"])
 app.include_router(producto_router, prefix="/api/productos", tags=["Productos"])
 app.include_router(venta_router, prefix="/api/ventas", tags=["Ventas"])
 app.include_router(empleado_router, prefix="/api/empleados", tags=["Empleados"])
+# app.include_router(citas_router, prefix="/api/citas", tags=["Citas"])
 
 
 # Ruta raíz que muestra un mensaje de bienvenida

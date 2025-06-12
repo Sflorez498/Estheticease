@@ -68,8 +68,8 @@ async def obtener_citas_cliente(id_cliente: int):
         cleverCursor.execute('''
             SELECT c.id_cita, c.id_cliente, c.id_servicio, c.id_empleado, c.fecha, c.hora, 
                    c.estado, c.notas, s.nombre_servicio as servicio_nombre 
-            FROM citas c 
-            JOIN servicios s ON c.id_servicio = s.id_servicio
+            FROM Citas c 
+            JOIN Servicios s ON c.id_servicio = s.id_servicio
             WHERE c.id_cliente = %s
         ''', (id_cliente,))
         citas = cleverCursor.fetchall()
@@ -99,9 +99,9 @@ def obtener_cita_por_id(id_cita: int):
             SELECT c.id_cita, c.id_cliente, c.id_servicio, c.id_empleado, c.fecha, c.hora, 
                    c.estado, c.notas, s.nombre_servicio as servicio_nombre, 
                    cl.nombre as cliente_nombre 
-            FROM citas c 
-            JOIN servicios s ON c.id_servicio = s.id_servicio
-            JOIN clientes cl ON c.id_cliente = cl.id_cliente
+            FROM Citas c 
+            JOIN Servicios s ON c.id_servicio = s.id_servicio
+            JOIN Clientes cl ON c.id_cliente = cl.id_cliente
             WHERE c.id_cita = %s
         '''
         cleverCursor.execute(select_query, (id_cita,))
@@ -113,7 +113,7 @@ def obtener_cita_por_id(id_cita: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al buscar cita: {e}")
 
-@citaRouter.get("/disponibilidad", status_code=status.HTTP_200_OK)
+@citaRouter.get("/citas/disponibilidad", status_code=status.HTTP_200_OK)
 def obtener_disponibilidad(fecha: str):
     """
     Obtiene la disponibilidad de empleados para una fecha específica
@@ -129,8 +129,8 @@ def obtener_disponibilidad(fecha: str):
             SELECT d.id_disponibilidad, d.id_empleado, d.fecha, d.hora, 
                    d.estado as estado_disponibilidad, e.nombre as empleado_nombre, 
                    e.especialidad
-            FROM disponibilidad d
-            JOIN empleados e ON d.id_empleado = e.id_empleado
+            FROM Disponibilidad d
+            JOIN Empleados e ON d.id_empleado = e.id_empleado
             WHERE d.fecha = %s AND d.estado = 1
         ''', (fecha_formateada,))
         disponibilidad = cleverCursor.fetchall()
@@ -157,23 +157,17 @@ def obtener_disponibilidad(fecha: str):
 @citaRouter.get("/servicios", status_code=status.HTTP_200_OK)
 def obtener_servicios():
     try:
-        cleverCursor.execute('SELECT id_servicio, nombre_servicio, duracion, precio FROM servicios')
-        servicios = cleverCursor.fetchall()
-        return servicios
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al obtener servicios: {e}")
-    """
-    Obtiene la lista de servicios disponibles
-    """
-    try:
-        cleverCursor.execute('''
-            SELECT id_servicio, nombre_servicio as nombre, duracion_minutos as duracion, 
-                   precio, is_active as estado 
-            FROM servicios 
-            WHERE is_active = 1
-        ''')
-        servicios = cleverCursor.fetchall()
-        return servicios
+        try:
+            cleverCursor.execute('''
+                SELECT id_servicio, nombre_servicio as nombre, duracion_minutos as duracion, 
+                       precio, is_active as estado 
+                FROM Servicios 
+                WHERE is_active = 1
+            ''')
+            servicios = cleverCursor.fetchall()
+            return servicios
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Error al obtener servicios: {e}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al obtener servicios: {e}")
 
@@ -183,20 +177,7 @@ def obtener_empleados():
     try:
         cleverCursor.execute('''
             SELECT id_empleado, nombre, especialidad 
-            FROM empleados 
-            WHERE is_active = 1
-        ''')
-        empleados = cleverCursor.fetchall()
-        return empleados
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al obtener empleados: {e}")
-    """
-    Obtiene la lista de empleados disponibles
-    """
-    try:
-        cleverCursor.execute('''
-            SELECT id_empleado, nombre, especialidad 
-            FROM empleados 
+            FROM Empleados 
             WHERE is_active = 1
         ''')
         empleados = cleverCursor.fetchall()
