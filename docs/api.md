@@ -1,18 +1,18 @@
-# API Documentation
+# Documentación de la API Estheticease
 
-## Authentication
+## Autenticación
 
-### Login
+### Iniciar Sesión
 - **Endpoint**: `/token`
-- **Method**: `POST`
-- **Request Body**:
+- **Método**: `POST`
+- **Cuerpo de la Solicitud**:
   ```json
   {
     "username": "string",
     "password": "string"
   }
   ```
-- **Response**:
+- **Respuesta**:
   ```json
   {
     "access_token": "string",
@@ -20,13 +20,15 @@
   }
   ```
 
-## Users
+¡Importante! El token obtenido debe incluirse en las siguientes peticiones como `Bearer token` en el header `Authorization`.
 
-### Get Current User
+## Usuarios
+
+### Obtener Usuario Actual
 - **Endpoint**: `/users/me`
-- **Method**: `GET`
-- **Authentication**: Required
-- **Response**:
+- **Método**: `GET`
+- **Autenticación**: Requerida
+- **Respuesta**:
   ```json
   {
     "username": "string",
