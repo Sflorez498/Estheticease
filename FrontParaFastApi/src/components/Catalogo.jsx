@@ -1,133 +1,60 @@
 // src/components/Catalogo.jsx
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { FaShoppingCart } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import '../styles/Catalogo.scss';
+import { productos } from '../data/productos';
 
-const productos = [
-  {
-    id: 1,
-    nombre: 'Serum Facial Revitalizante',
-    descripcion: 'Un serum ligero para una piel radiante.',
-    imagen: 'https://http2.mlstatic.com/D_Q_NP_886565-MLU74002890508_012024-O.webp',
-    precio: 25000,
-  },
-  {
-    id: 2,
-    nombre: 'Mascarilla de Arcilla Purificante',
-    descripcion: 'Limpia profundamente los poros y reduce el brillo.',
-    imagen: 'https://http2.mlstatic.com/D_NQ_NP_672265-MLU78043970279_072024-O.webp',
-    precio: 18000,
-  },
-  {
-    id: 3,
-    nombre: 'Aceite Esencial de Lavanda Relajante',
-    descripcion: 'Promueve la calma y el bienestar.',
-    imagen: 'https://m.media-amazon.com/images/I/7193gkOb8iL._AC_UF1000,1000_QL80_.jpg',
-    precio: 12000,
-  },
-  {
-    id: 4,
-    nombre: 'Exfoliante Corporal de Café',
-    descripcion: 'Suaviza y revitaliza la piel.',
-    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR92KOmDoYAbTE_cTgzF0htDkc8BELtWdi-4Q&s',
-    precio: 20000,
-  },
-  {
-    id: 5,
-    nombre: 'Crema Hidratante de Rosas',
-    descripcion: 'Hidratación profunda con un aroma delicado.',
-    imagen: 'https://habibdroguerias.vtexassets.com/arquivos/ids/155849-800-auto?v=638459608786100000&width=800&height=auto&aspect=true',
-    precio: 28000,
-  },
-  {
-    id: 6,
-    nombre: 'Tónico Facial Refrescante',
-    descripcion: 'Equilibra el pH de la piel después de la limpieza.',
-    imagen: 'https://habibdroguerias.vtexassets.com/arquivos/ids/163701/7708877993755.jpg?v=638524255998130000',
-    precio: 15000,
-  },
-  {
-    id: 7,
-    nombre: 'Bálsamo Labial Nutritivo',
-    descripcion: 'Hidrata y protege los labios secos.',
-    imagen: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNSKBQjkPFNybi1_jMyJzoVKa3FZevwVhSZQ&s',
-    precio: 8000,
-  },
-  {
-    id: 8,
-    nombre: 'Mascarilla Capilar Reparadora',
-    descripcion: 'Fortalece y da brillo al cabello dañado.',
-    imagen: 'https://static.sweetcare.com/img/prd/488/v-638200521557168666/elvive-013686ze_01.jpg',
-    precio: 22000,
-  },
-];
-
-const agregarAlCarrito = (producto) => {
-  // Obtener el carrito actual del localStorage
-  let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-  
-  // Verificar si el producto ya está en el carrito
-  const productoExistente = carrito.find(p => p.id === producto.id);
-  
-  if (productoExistente) {
-    // Si existe, aumentar la cantidad
-    productoExistente.cantidad += 1;
-  } else {
-    // Si no existe, agregar con cantidad 1
-    carrito.push({
-      ...producto,
-      cantidad: 1
-    });
-  }
-  
-  // Guardar el carrito actualizado
-  localStorage.setItem('carrito', JSON.stringify(carrito));
-  
-  // Mostrar mensaje de éxito
-  alert('Producto agregado al carrito');
+const obtenerTotalCarrito = (carrito) => {
+  return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 };
 
 const Catalogo = () => {
-  const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [mostrarCarrito, setMostrarCarrito] = useState(false);
+
+  // Obtener carrito del localStorage
+  const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+  const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
+
+  const agregarAlCarrito = (producto) => {
+    // Obtener el carrito actual del localStorage
+    let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+    
+    // Verificar si el producto ya está en el carrito
+    const productoExistente = carrito.find(p => p.id_producto === producto.id_producto);
+    
+    if (productoExistente) {
+      // Si existe, aumentar la cantidad
+      productoExistente.cantidad += 1;
+    } else {
+      // Si no existe, agregar con cantidad 1
+      carrito.push({
+        ...producto,
+        cantidad: 1
+      });
+    }
+    
+    // Guardar el carrito actualizado
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    
+    // Mostrar mensaje de éxito
+    alert('Producto agregado al carrito');
+  };
+
+  const eliminarDelCarrito = (id) => {
+    const nuevoCarrito = carrito.filter(item => item.id_producto !== id);
+    localStorage.setItem('carrito', JSON.stringify(nuevoCarrito));
+    setMostrarCarrito(true); // Actualizar la vista del carrito
+  };
+
+  const limpiarCarrito = () => {
+    localStorage.removeItem('carrito');
+    setMostrarCarrito(true); // Actualizar la vista del carrito
+  };
 
   useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/api/productos');
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => null);
-          throw new Error(errorData?.detail || 'Error al cargar productos');
-        }
-        const data = await response.json();
-        console.log('Datos recibidos de la API:', data);
-        
-        // Verificar si data es un array y tiene la estructura correcta
-        if (Array.isArray(data)) {
-          const productosFormateados = data.map(item => ({
-            id_producto: item.id_producto || 0,
-            nombre: item.nombre_producto || 'Producto sin nombre',
-            precio: item.precio || 0,
-            stock: item.stock || 0,
-            categoria: item.categoria || 'Sin categoría',
-            // Agregar una imagen vacía por defecto
-            imagen: item.imagen_url || 'https://via.placeholder.com/200x200?text=No+Image'
-          }));
-          setProductos(productosFormateados);
-        } else {
-          throw new Error('Los datos no son un array válido');
-        }
-      } catch (error) {
-        console.error('Error al cargar productos:', error);
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProductos();
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -138,25 +65,65 @@ const Catalogo = () => {
     );
   }
 
-  if (loading) {
-    return (
-      <div className="catalogo-container">
-        <h2>Cargando productos...</h2>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="catalogo-container">
-        <h2>Error al cargar productos</h2>
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="catalogo-container">
+      <div className="carrito-header">
+        <FaShoppingCart 
+          className="cart-icon-header" 
+          onClick={() => setMostrarCarrito(!mostrarCarrito)}
+          style={{ cursor: 'pointer' }}
+        />
+        {totalItems > 0 && (
+          <span className="cart-count">{totalItems}</span>
+        )}
+      </div>
+      
+      {mostrarCarrito && (
+        <div className="carrito-modal">
+          <div className="carrito-modal-content">
+            <div className="carrito-header-modal">
+              <h3>Carrito de Compras</h3>
+              <FaTimes 
+                className="close-icon" 
+                onClick={() => setMostrarCarrito(false)}
+              />
+            </div>
+            {carrito.length > 0 ? (
+              <div className="carrito-items">
+                {carrito.map(item => (
+                  <div key={item.id_producto} className="carrito-item">
+                    <img 
+                      src={item.imagen_url} 
+                      alt={item.nombre_producto} 
+                      className="carrito-item-image"
+                    />
+                    <div className="carrito-item-details">
+                      <h4>{item.nombre_producto}</h4>
+                      <p>Cantidad: {item.cantidad}</p>
+                      <p>Precio: ${item.precio.toLocaleString()}</p>
+                      <button 
+                        className="carrito-item-remove" 
+                        onClick={() => eliminarDelCarrito(item.id_producto)}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <div className="carrito-total">
+                  <h4>Total: ${obtenerTotalCarrito(carrito).toLocaleString()}</h4>
+                  <button className="carrito-limpiar" onClick={limpiarCarrito}>
+                    Limpiar Carrito
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <p className="carrito-vacio">El carrito está vacío</p>
+            )}
+          </div>
+        </div>
+      )}
+
       <h2>Nuestro Catálogo de Belleza</h2>
       <ul className="productos-grid">
         {productos.map(producto => (

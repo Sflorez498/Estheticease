@@ -1,0 +1,238 @@
+/* Estilos generales de la aplicación */
+
+/* Variables */
+$primary-color: #6a4c9c;
+$secondary-color: #50357a;
+$background-color: #f5f5f5;
+$text-color: #333;
+$border-radius: 8px;
+$spacing: 1rem;
+
+/* Estilos específicos para la nueva estructura */
+.app-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 2rem;
+}
+
+.inicio-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+
+  h1 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+  }
+
+  .inicio-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 1rem;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background: #27ae60;
+      }
+
+      .fa-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+.bienvenida-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.bienvenida {
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 2rem;
+  }
+
+  .opciones {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    .opcion-btn {
+      padding: 1rem 2rem;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background: #2980b9;
+      }
+
+      .fa-icon {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+.seccion-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.cerrar-sesion-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease-in-out;
+
+  &:hover {
+    background: #c0392b;
+  }
+
+  .fa-icon {
+    font-size: 1.2rem;
+  }
+}
+
+/* Variables */
+$primary-color: #6a4c9c;
+$secondary-color: #50357a;
+$background-color: #f5f5f5;
+$text-color: #333;
+$border-radius: 8px;
+$spacing: 1rem;
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+  line-height: 1.6;
+}
+
+/* Contenedor principal */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenido principal */
+.app-main {
+  flex: 1;
+  padding: $spacing;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Botones */
+.btn-primary {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}
+
+/* Formularios */
+.form-group {
+  margin-bottom: $spacing;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: $border-radius;
+    font-size: 1rem;
+  }
+}
+
+/* Mensajes */
+.error {
+  color: #dc3545;
+  padding: $spacing;
+  border-radius: $border-radius;
+  margin-bottom: $spacing;
+}
+
+/* Cargando */
+.loading {
+  text-align: center;
+  padding: $spacing * 4;
+  color: $text-color;
+}

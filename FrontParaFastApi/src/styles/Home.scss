@@ -1,0 +1,155 @@
+/* Estilos para la página principal */
+
+/* Variables */
+$primary-color: #6a4c9c;
+$secondary-color: #50357a;
+$background-color: #f5f5f5;
+$text-color: #333;
+
+/* Estilos generales */
+.fondo {
+  min-height: 100vh;
+  background-color: $background-color;
+}
+
+/* Navbar */
+.navbar {
+  background-color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .navbar-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $primary-color;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: $secondary-color;
+    }
+  }
+
+  .navbar-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+
+    li {
+      cursor: pointer;
+      color: $text-color;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+/* Hero */
+.hero {
+  background-image: url('https://i.pinimg.com/736x/4f/ac/6a/4fac6a5b2f1d11667644f8d99b498d6a.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  padding: 2rem;
+
+  .hero-content {
+    max-width: 800px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .btn-primary {
+      background-color: $primary-color;
+      color: white;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: $secondary-color;
+      }
+    }
+  }
+}
+
+/* Sección de características */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .feature {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      color: $primary-color;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #666;
+    }
+  }
+}
+
+/* Sección de llamada a la acción */
+.cta {
+  background-color: $primary-color;
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 2rem;
+  }
+
+  .btn-primary {
+    background-color: white;
+    color: $primary-color;
+    border: 2px solid white;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: $secondary-color;
+      color: white;
+    }
+  }
+}

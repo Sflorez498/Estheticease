@@ -117,8 +117,8 @@ const Calendario = () => {
   return (
     <div className="calendario-container">
       <div className="header-container">
-        <h2>Mis Citas</h2>
-        <button className="logout-button" onClick={handleLogout}>
+        <h2>Agenda de Citas</h2>
+        <button className="btn-cerrar-sesion" onClick={handleLogout}>
           Cerrar Sesión
         </button>
       </div>
