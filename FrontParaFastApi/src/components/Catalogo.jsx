@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import '../styles/Catalogo.scss';
 import { productos } from '../data/productos';
 
@@ -12,6 +13,11 @@ const obtenerTotalCarrito = (carrito) => {
 const Catalogo = () => {
   const [loading, setLoading] = useState(true);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
+  const [mostrarPago, setMostrarPago] = useState(false);
+  const [numeroTarjeta, setNumeroTarjeta] = useState('');
+  const [clave, setClave] = useState('');
+  const [errorPago, setErrorPago] = useState('');
+  const [exitoPago, setExitoPago] = useState(false);
 
   // Obtener carrito del localStorage
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
@@ -53,6 +59,36 @@ const Catalogo = () => {
     setMostrarCarrito(true); // Actualizar la vista del carrito
   };
 
+  const realizarPago = () => {
+    // Validar número de tarjeta (10 dígitos)
+    if (!/^[0-9]{10}$/.test(numeroTarjeta)) {
+      setErrorPago('El número de tarjeta debe tener exactamente 10 dígitos');
+      return;
+    }
+
+    // Validar clave (al menos 4 caracteres)
+    if (clave.length < 4) {
+      setErrorPago('La clave debe tener al menos 4 caracteres');
+      return;
+    }
+
+    // Simular proceso de pago
+    setExitoPago(true);
+    setTimeout(() => {
+      // Limpiar el carrito
+      limpiarCarrito();
+      // Cerrar el modal de pago
+      setMostrarPago(false);
+      // Limpiar los campos
+      setNumeroTarjeta('');
+      setClave('');
+      setErrorPago('');
+      setExitoPago(false);
+      // Cerrar el carrito
+      setMostrarCarrito(false);
+    }, 1500);
+  };
+
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -67,6 +103,7 @@ const Catalogo = () => {
 
   return (
     <div className="catalogo-container">
+      {/* Carrito */}
       <div className="carrito-header">
         <FaShoppingCart 
           className="cart-icon-header" 
@@ -77,7 +114,7 @@ const Catalogo = () => {
           <span className="cart-count">{totalItems}</span>
         )}
       </div>
-      
+
       {mostrarCarrito && (
         <div className="carrito-modal">
           <div className="carrito-modal-content">
@@ -112,9 +149,17 @@ const Catalogo = () => {
                 ))}
                 <div className="carrito-total">
                   <h4>Total: ${obtenerTotalCarrito(carrito).toLocaleString()}</h4>
-                  <button className="carrito-limpiar" onClick={limpiarCarrito}>
-                    Limpiar Carrito
-                  </button>
+                  <div className="carrito-actions">
+                    <button 
+                      className="carrito-pagar" 
+                      onClick={() => setMostrarPago(true)}
+                    >
+                      Realizar Pago
+                    </button>
+                    <button className="carrito-limpiar" onClick={limpiarCarrito}>
+                      Limpiar Carrito
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -124,6 +169,49 @@ const Catalogo = () => {
         </div>
       )}
 
+      {/* Modal de Pago */}
+      <Modal show={mostrarPago} onHide={() => setMostrarPago(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Pago</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {exitoPago ? (
+            <Alert variant="success">
+              ¡Compra exitosa! Los productos han sido eliminados del carrito.
+            </Alert>
+          ) : (
+            <Form onSubmit={(e) => {
+              e.preventDefault();
+              realizarPago();
+            }}>
+              <Form.Group className="mb-3">
+                <Form.Label>Número de tarjeta</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="1234567890"
+                  value={numeroTarjeta}
+                  onChange={(e) => setNumeroTarjeta(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Clave</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Clave"
+                  value={clave}
+                  onChange={(e) => setClave(e.target.value)}
+                />
+              </Form.Group>
+              {errorPago && <Alert variant="danger">{errorPago}</Alert>}
+              <Button variant="primary" type="submit" className="w-100">
+                Pagar
+              </Button>
+            </Form>
+          )}
+        </Modal.Body>
+      </Modal>
+
+      {/* Catálogo */}
       <h2>Nuestro Catálogo de Belleza</h2>
       <ul className="productos-grid">
         {productos.map(producto => (

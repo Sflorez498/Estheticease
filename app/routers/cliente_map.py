@@ -91,20 +91,23 @@ def get_cliente_by_id(id_cliente: int) -> Optional[dict]:
 def login_user(creenciales: CredencialesLogin):
     try:
         cleverCursor.execute(
-            "SELECT * FROM Clientes WHERE Correo = %s", (creenciales.correo,)
+            "SELECT Id_Cliente, Nombre, Contacto, Correo, Contraseña, Genero, Edad FROM Clientes WHERE Correo = %s", 
+            (creenciales.correo,)
         )
         user = cleverCursor.fetchone()
         if not user:
             raise HTTPException(status_code=404, detail="Usuario no encontrado")
         
-        hashed_password_from_db = user[4]  # Verifica este índice según tu tabla
+        # La contraseña está en el índice 4 (según la consulta)
+        hashed_password_from_db = user[4]
         
         if bcrypt.checkpw(creenciales.contraseña.encode('utf-8'), hashed_password_from_db.encode('utf-8')):
             return {"message": "Inicio de sesión exitoso", "Id_Cliente": user[0]}
         else:
             raise HTTPException(status_code=401, detail="Contraseña incorrecta")
     except Exception as err:
-        raise HTTPException(status_code=500, detail=f"Error al iniciar sesión: {err}")
+        print(f"Error en login: {str(err)}")
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 # Nueva ruta para eliminar un cliente
 # Ruta para eliminar un cliente

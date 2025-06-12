@@ -18,20 +18,27 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8000/api/clientes/login', {
         correo: correo,
-        contraseña: contraseña,
+        contraseña: contraseña
       });
 
-      console.log('Respuesta login:', response.data);
-      if (response.data && response.status >= 200 && response.status < 300) {
-        // Guardar el ID del usuario que viene en la respuesta
+      console.log('Respuesta del backend:', response.data);
+      console.log('Status:', response.status);
+
+      // Verificar si la respuesta es exitosa
+      if (response.status === 200) {
+        console.log('Inicio de sesión exitoso');
+        
+        // Generar un token simple
+        const token = 'Bearer ' + Math.random().toString(36).substring(2, 15);
+        
+        // Guardar el token y el ID del cliente
+        localStorage.setItem('token', token);
         localStorage.setItem('userId', response.data.Id_Cliente);
-        // Guardar el ID del usuario que viene en la respuesta
-        localStorage.setItem('userId', response.data.Id_Cliente);
-        localStorage.setItem('token', response.data.token); // Guardar el token si existe
-        alert('Inicio de sesión exitoso');
-        navigate('/catalogo');
+        
+        // Forzar la actualización del componente antes de redirigir
+        window.location.href = '/dashboard';
       } else {
-        setError(response.data?.detail || 'Error al iniciar sesión');
+        setError('Error al iniciar sesión');
       }
     } catch (error) {
       setError(error.response?.data?.detail || 'Error al iniciar sesión');

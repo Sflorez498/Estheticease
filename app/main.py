@@ -3,17 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 # Importar routers modulares usando importaciones absolutas
-from app.routers.cliente_map import clienteRouter
-from app.routers.servicio_map import servicioRouter
-from app.routers.producto_map import productoRouter
-from app.routers.venta_map import ventaRouter
-from app.routers.cita_map import citaRouter
-from app.routers.empleado_map import empleadoRouter
-
-# Importar routers modulares usando importaciones absolutas
-from app.routers.admin import router as adminRouter  # Nuevo router de administración
-# from routers.usuario_map import usuarioRouter  # Activar si se implementa
-from app.routers.dev_map import devRouter  # Rutas de desarrollo separadas
+from app.routers.cita_map import citaRouter as cita_router
+from app.routers.cliente_map import clienteRouter as cliente_router
+from app.routers.servicio_map import servicioRouter as servicio_router
+from app.routers.admin import router as adminRouter
+from app.routers.dev_map import devRouter as dev_router  # Rutas de desarrollo separadas
+from app.routers.producto_map import productoRouter as producto_router
+from app.routers.venta_map import ventaRouter as venta_router
+from app.routers.empleado_map import empleadoRouter as empleado_router
 
 # Configuración inicial de la API
 app = FastAPI(
@@ -32,17 +29,15 @@ app.add_middleware(
 )
 
 # Registrar routers principales
-app.include_router(clienteRouter, prefix="/api/clientes", tags=["Clientes"])
-app.include_router(servicioRouter, prefix="/api/servicios", tags=["Servicios"])
-app.include_router(productoRouter, prefix="/api/productos", tags=["Productos"])
-app.include_router(ventaRouter, prefix="/api/ventas", tags=["Ventas"])
-app.include_router(citaRouter, prefix="/api/citas", tags=["Citas"])
-app.include_router(empleadoRouter, prefix="/api/empleados", tags=["Empleados"])
-app.include_router(adminRouter)  # Router de administración
-# app.include_router(usuarioRouter, prefix="/usuarios", tags=["Usuarios"])
+app.include_router(cliente_router, prefix="/api/clientes", tags=["Clientes"])
+app.include_router(servicio_router, prefix="/api/servicios", tags=["Servicios"])
+app.include_router(cita_router, prefix="/api/citas", tags=["Citas"])
+app.include_router(adminRouter, prefix="/admin", tags=["Admin"])
+app.include_router(dev_router, prefix="/dev", tags=["Dev"])
+app.include_router(producto_router, prefix="/api/productos", tags=["Productos"])
+app.include_router(venta_router, prefix="/api/ventas", tags=["Ventas"])
+app.include_router(empleado_router, prefix="/api/empleados", tags=["Empleados"])
 
-# Rutas de prueba solo en desarrollo
-app.include_router(devRouter, prefix="/dev", tags=["Desarrollo"])
 
 # Ruta raíz GET
 @app.get("/")

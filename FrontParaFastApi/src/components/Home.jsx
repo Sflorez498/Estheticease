@@ -14,8 +14,6 @@ const Home = () => {
           Estheticease
         </div>
         <ul className="navbar-links">
-          <li onClick={() => navigate("/catalogo")}>Catálogo</li>
-          <li onClick={() => navigate("/calendario")}>Calendario</li>
           <li onClick={() => navigate("/registro")}>Registrarse</li>
           <li onClick={() => navigate("/login")}>Login</li>
         </ul>
@@ -49,7 +47,7 @@ const Home = () => {
             color: "#fff",
             cursor: "pointer"
           }}
-          onClick={() => navigate("/registro")}
+          onClick={() => navigate("/login")}
         >
           Agenda tu cita ahora
         </button>

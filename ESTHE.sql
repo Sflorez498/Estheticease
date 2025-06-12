@@ -79,18 +79,16 @@ CREATE TABLE Productos (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Tabla de Horarios
-CREATE TABLE Horarios (
-    id_horario INT PRIMARY KEY AUTO_INCREMENT,
+-- Tabla de Disponibilidad
+CREATE TABLE Disponibilidad (
+    id_disponibilidad INT PRIMARY KEY AUTO_INCREMENT,
     id_empleado INT,
-    dia_semana ENUM('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo') NOT NULL,
-    hora_inicio TIME NOT NULL,
-    hora_fin TIME NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+    estado BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_empleado) REFERENCES Empleados(id_empleado) ON DELETE CASCADE,
-    CHECK (hora_fin > hora_inicio)
+    FOREIGN KEY (id_empleado) REFERENCES Empleados(id_empleado) ON DELETE CASCADE
 );
 
 -- Tabla de Citas
@@ -99,7 +97,8 @@ CREATE TABLE Citas (
     id_cliente INT,
     id_servicio INT,
     id_empleado INT,
-    fecha_hora DATETIME NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
     estado ENUM('Pendiente', 'Confirmada', 'Cancelada', 'Completada') DEFAULT 'Pendiente',
     notas TEXT,
     is_active BOOLEAN DEFAULT TRUE,
@@ -108,6 +107,18 @@ CREATE TABLE Citas (
     FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente) ON DELETE CASCADE,
     FOREIGN KEY (id_servicio) REFERENCES Servicios(id_servicio) ON DELETE SET NULL,
     FOREIGN KEY (id_empleado) REFERENCES Empleados(id_empleado) ON DELETE SET NULL
+);
+
+-- Tabla de Reservas
+CREATE TABLE Reservas (
+    id_reserva INT PRIMARY KEY AUTO_INCREMENT,
+    id_cita INT NOT NULL,
+    id_disponibilidad INT NOT NULL,
+    estado BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_cita) REFERENCES Citas(id_cita),
+    FOREIGN KEY (id_disponibilidad) REFERENCES Disponibilidad(id_disponibilidad)
 );
 
 -- Tabla de Ventas
