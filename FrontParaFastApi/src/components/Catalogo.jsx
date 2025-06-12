@@ -211,27 +211,48 @@ const Catalogo = () => {
         </Modal.Body>
       </Modal>
 
-      {/* Catálogo */}
-      <h2>Nuestro Catálogo de Belleza</h2>
-      <ul className="productos-grid">
-        {productos.map(producto => (
-          <li key={producto.id_producto} className="producto-item">
-            <img src={producto.imagen} alt={producto.nombre} className="producto-imagen" />
-            <h3 className="producto-nombre">{producto.nombre}</h3>
-            <p className="producto-descripcion">{producto.descripcion}</p>
-            <span className="producto-precio">${producto.precio ? producto.precio.toLocaleString() : 'Precio no disponible'}</span>
-            <button 
-              className="producto-boton" 
-              onClick={() => agregarAlCarrito(producto)}
-            >
-              <FaShoppingCart className="cart-icon" />
-              Agregar al Carrito
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    {/* Catálogo */}
+    <h2>Nuestro Catálogo de Belleza</h2>
+    <ul className="productos-grid">
+      {productos.map(producto => (
+        <li key={producto.id_producto} className="producto-item">
+          <div className="producto-imagen-container">
+            <img 
+              src={producto.imagen_url} 
+              alt={producto.nombre_producto} 
+              className="producto-imagen"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/250x250/cccccc/666666/?text=No+Image';
+              }}
+              style={{
+                width: '100%',
+                height: '250px',
+                objectFit: 'cover',
+                borderRadius: '12px',
+                transition: 'all 0.3s ease',
+                opacity: 0,
+                animation: 'fade-in 0.5s ease-out forwards'
+              }}
+            />
+            <div className="imagen-loading">
+              <div className="spinner"></div>
+            </div>
+          </div>
+          <h3 className="producto-nombre">{producto.nombre_producto}</h3>
+          <p className="producto-descripcion">{producto.descripcion}</p>
+          <span className="producto-precio">${producto.precio ? producto.precio.toLocaleString() : 'Precio no disponible'}</span>
+          <button 
+            className="producto-boton" 
+            onClick={() => agregarAlCarrito(producto)}
+          >
+            <FaShoppingCart className="cart-icon" />
+            Agregar al Carrito
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 };
 
 export default Catalogo;
