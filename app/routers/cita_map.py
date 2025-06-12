@@ -1,3 +1,5 @@
+# Rutas y modelos relacionados con citas y disponibilidad
+
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn
@@ -7,35 +9,41 @@ import bcrypt
 
 citaRouter = APIRouter()
 
-# Modelos de datos
+# Modelos de datos para servicios, empleados y citas
+
 class Servicio(BaseModel):
+    """Modelo para representar un servicio del salón"""
     id_servicio: int
     nombre: str
-    duracion: int
+    duracion: int  # En minutos
     precio: float
 
 class Empleado(BaseModel):
+    """Modelo para representar un empleado del salón"""
     id_empleado: int
     nombre: str
     especialidad: str
 
 class Disponibilidad(BaseModel):
+    """Modelo para representar la disponibilidad de un empleado"""
     id_disponibilidad: int
     id_empleado: int
-    fecha: str
-    hora: str
-    estado: bool
+    fecha: str  # Formato YYYY-MM-DD
+    hora: str   # Formato HH:MM
+    estado: bool  # True si está disponible, False si no
 
 class CitaBase(BaseModel):
+    """Modelo base para crear una cita"""
     id_cliente: int
     id_empleado: int
     id_servicio: int
-    fecha: str
-    hora: str
-    estado: str = "Pendiente"
-    notas: Optional[str] = None
+    fecha: str  # Formato YYYY-MM-DD
+    hora: str   # Formato HH:MM
+    estado: str = "Pendiente"  # Pendiente por defecto
+    notas: Optional[str] = None  # Notas opcionales sobre la cita
 
 class CitaDB(CitaBase):
+    """Modelo completo que incluye el ID de la cita"""
     id_cita: Optional[int] = None
 
 @citaRouter.get("/", status_code=status.HTTP_200_OK)

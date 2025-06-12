@@ -1,4 +1,4 @@
-// src/components/Catalogo.jsx
+// Componente que muestra el catálogo de productos y maneja el carrito
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
@@ -6,21 +6,25 @@ import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import '../styles/Catalogo.scss';
 import { productos } from '../data/productos';
 
+// Función auxiliar para calcular el total del carrito
 const obtenerTotalCarrito = (carrito) => {
   return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 };
 
+// Componente principal del catálogo
 const Catalogo = () => {
-  const [loading, setLoading] = useState(true);
-  const [mostrarCarrito, setMostrarCarrito] = useState(false);
-  const [mostrarPago, setMostrarPago] = useState(false);
-  const [numeroTarjeta, setNumeroTarjeta] = useState('');
-  const [clave, setClave] = useState('');
-  const [errorPago, setErrorPago] = useState('');
-  const [exitoPago, setExitoPago] = useState(false);
+  const [loading, setLoading] = useState(true);  // Estado de carga
+  const [mostrarCarrito, setMostrarCarrito] = useState(false);  // Estado del modal del carrito
+  const [mostrarPago, setMostrarPago] = useState(false);  // Estado del modal de pago
+  const [numeroTarjeta, setNumeroTarjeta] = useState('');  // Número de tarjeta para pago
+  const [clave, setClave] = useState('');  // Clave para pago
+  const [errorPago, setErrorPago] = useState('');  // Mensaje de error en pago
+  const [exitoPago, setExitoPago] = useState(false);  // Estado de éxito en pago
 
   // Obtener carrito del localStorage
+  // Si no existe, se inicializa como un array vacío
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
+  // Calcular total de items en el carrito
   const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
 
   const agregarAlCarrito = (producto) => {

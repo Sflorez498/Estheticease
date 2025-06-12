@@ -1,3 +1,4 @@
+// Componente que muestra el calendario de citas
 import React, { useState, useEffect } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
@@ -7,11 +8,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/calendario.scss';
 
-// ✅ localizer válido para react-big-calendar
+// Configuración de la localización para el calendario en español
 const locales = {
   es: es,
 };
 
+// Localizer para manejar fechas en español
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -20,42 +22,49 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+// Componente principal del calendario
 const Calendario = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState('');
-  const [servicios, setServicios] = useState([]);
-  const [empleados, setEmpleados] = useState([]);
-  const [disponibilidad, setDisponibilidad] = useState([]);
+  const [events, setEvents] = useState([]);  // Eventos/citas del calendario
+  const [selectedDate, setSelectedDate] = useState(null);  // Fecha seleccionada
+  const [showModal, setShowModal] = useState(false);  // Estado del modal
+  const [modalContent, setModalContent] = useState('');  // Contenido del modal
+  const [servicios, setServicios] = useState([]);  // Lista de servicios disponibles
+  const [empleados, setEmpleados] = useState([]);  // Lista de empleados
+  const [disponibilidad, setDisponibilidad] = useState([]);  // Disponibilidad de empleados
 
+  // Efecto que se ejecuta al montar el componente
   useEffect(() => {
+    // Obtener servicios disponibles
     axios.get('http://localhost:8000/api/servicios')
       .then(res => setServicios(res.data))
       .catch(err => console.error('Error al obtener servicios:', err));
 
+    // Obtener empleados disponibles
     axios.get('http://localhost:8000/api/empleados')
       .then(res => setEmpleados(res.data))
       .catch(err => console.error('Error al obtener empleados:', err));
 
+    // Obtener citas del usuario actual
     const userId = localStorage.getItem('userId');
     if (userId) {
       axios.get(`http://localhost:8000/api/citas/cliente/${userId}`)
         .then(res => {
+          // Convertir las citas al formato del calendario
           const citas = res.data.map(cita => ({
-            title: cita.nombre_servicio,
-            start: new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`),
-            end: new Date(new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`).getTime() + 30 * 60000),
-            allDay: false,
-            id: cita.Id_Cita
+            title: cita.nombre_servicio,  // Título del evento
+            start: new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`),  // Fecha de inicio
+            end: new Date(new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`).getTime() + 30 * 60000),  // Fecha de fin (30 minutos después)
+            allDay: false,  // No es un evento de todo el día
+            id: cita.Id_Cita  // ID de la cita
           }));
           setEvents(citas);
         })
         .catch(err => console.error('Error al obtener citas:', err));
     }
-  }, []);
+  }, [navigate]);
 
+  // Manejador para seleccionar un slot en el calendario
   const handleSelectSlot = (slotInfo) => {
     const date = format(slotInfo.start, 'yyyy-MM-dd');
     axios.get(`http://localhost:8000/api/citas/disponibilidad?fecha=${date}`)
