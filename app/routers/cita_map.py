@@ -4,7 +4,18 @@ from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel
 from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
+
+# Rutas y modelos relacionados con citas y disponibilidad
+
+from fastapi import APIRouter, HTTPException, status
+from pydantic import BaseModel
+from app.database.Clever_MySQL_conn import cleverCursor, mysqlConn
+from datetime import datetime, timedelta
+import bcrypt
+
+# Inicializar el router
+citaRouter = APIRouter()
 import bcrypt
 
 citaRouter = APIRouter()
@@ -154,6 +165,12 @@ def obtener_disponibilidad(fecha: str):
         raise HTTPException(status_code=500, detail=f"Error al obtener disponibilidad: {e}")
 
 # Redirigir a la ruta correcta de servicios
+
+# Registrar la ruta de empleados antes de las rutas dinámicas para evitar conflictos de ruta
+@citaRouter.get("/empleados", status_code=status.HTTP_200_OK, response_model=List[Dict[str, Any]])
+def obtener_empleados_route():
+    # Delegamos la lógica al método principal definido más abajo
+    return obtener_empleados()
 @citaRouter.get("/servicios", status_code=status.HTTP_200_OK)
 def obtener_servicios():
     try:
@@ -172,7 +189,7 @@ def obtener_servicios():
         raise HTTPException(status_code=500, detail=f"Error al obtener servicios: {e}")
 
 # Redirigir a la ruta correcta de empleados
-@citaRouter.get("/empleados", status_code=status.HTTP_200_OK)
+# @citaRouter.get("/empleados", status_code=status.HTTP_200_OK, response_model=List[Dict[str, Any]])
 def obtener_empleados():
     try:
         cleverCursor.execute('''

@@ -4,7 +4,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import es from 'date-fns/locale/es';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import axios from 'axios';
+import axiosInstance from '../api/axioInstance';
 import { useNavigate } from 'react-router-dom';
 import '../styles/calendario.scss';
 
@@ -37,7 +37,7 @@ const Calendario = () => {
         
         // Cargar servicios
         try {
-          const serviciosRes = await axios.get('http://localhost:8000/api/servicios/'); // Corregir la URL de la API de servicios para eliminar la barra final
+          const serviciosRes = await axiosInstance.get('/api/servicios'); // Corregir la URL de la API de servicios para eliminar la barra final
           if (serviciosRes.data) {
             setServicios(serviciosRes.data);
             console.log('Servicios cargados:', serviciosRes.data);
@@ -58,7 +58,7 @@ const Calendario = () => {
 
         // Cargar empleados
         try {
-          const empleadosRes = await axios.get('http://localhost:8000/api/citas/empleados');
+          const empleadosRes = await axiosInstance.get('/api/citas/empleados');
           if (empleadosRes.data) {
             setEmpleados(empleadosRes.data);
             console.log('Empleados cargados:', empleadosRes.data);
@@ -68,11 +68,16 @@ const Calendario = () => {
           }
         } catch (empleadosErr) {
           console.error('Error al cargar empleados:', empleadosErr.response?.data || empleadosErr);
-          const empleadosMessage = empleadosErr.response?.data?.detail || 
-                                empleadosErr.response?.data?.message || 
-                                empleadosErr.message || 
-                                'Error al cargar los empleados';
-          setError(empleadosMessage || 'Error al cargar los empleados');
+          const empleadosMessage = empleadosErr.response?.data?.detail ? 
+                                 (Array.isArray(empleadosErr.response.data.detail) 
+                                  ? empleadosErr.response.data.detail.map(e => 
+                                    `Error en ${e.loc}: ${e.msg}`).join('. ') 
+                                  : empleadosErr.response.data.detail) 
+                                 : empleadosErr.response?.data?.message || 
+                                 empleadosErr.message || 
+                                 'Error al cargar los empleados';
+            setError(typeof empleadosMessage === 'string' ? empleadosMessage : JSON.stringify(empleadosMessage));
+            console.error('Detalles del error:', empleadosErr.response?.data);
           setStatus('Error al cargar empleados');
           throw empleadosErr;
         }
@@ -81,7 +86,7 @@ const Calendario = () => {
         try {
           const userId = localStorage.getItem('userId');
           if (userId) {
-            const citasRes = await axios.get(`http://localhost:8000/api/citas/cliente/${userId}`);
+            const citasRes = await axiosInstance.get(`/api/citas/cliente/${userId}`);
             if (citasRes.data) {
               const citas = citasRes.data.map(cita => {
                 const start = new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`);
@@ -103,11 +108,16 @@ const Calendario = () => {
           }
         } catch (citasErr) {
           console.error('Error al cargar citas:', citasErr.response?.data || citasErr);
-          const citasMessage = citasErr.response?.data?.detail || 
-                             citasErr.response?.data?.message || 
-                             citasErr.message || 
-                             'Error al cargar las citas';
-            setError(citasMessage || 'Error al cargar las citas');
+          const citasMessage = citasErr.response?.data?.detail ? 
+                              (Array.isArray(citasErr.response.data.detail) 
+                               ? citasErr.response.data.detail.map(e => 
+                                 `Error en ${e.loc}: ${e.msg}`).join('. ') 
+                               : citasErr.response.data.detail) 
+                              : citasErr.response?.data?.message || 
+                              citasErr.message || 
+                              'Error al cargar las citas';
+            setError(typeof citasMessage === 'string' ? citasMessage : JSON.stringify(citasMessage));
+            console.error('Detalles del error:', citasErr.response?.data);
           setStatus('Error al cargar citas');
           throw citasErr;
         }
@@ -115,11 +125,16 @@ const Calendario = () => {
         setStatus('Datos cargados');
       } catch (err) {
         console.error('Error general al cargar datos:', err.response?.data || err);
-        const errorMessage = err.response?.data?.detail || 
-                           err.response?.data?.message || 
+        const errorMessage = err.response?.data?.detail ? 
+                           (Array.isArray(err.response.data.detail) 
+                            ? err.response.data.detail.map(e => 
+                              `Error en ${e.loc}: ${e.msg}`).join('. ') 
+                            : err.response.data.detail) 
+                           : err.response?.data?.message || 
                            err.message || 
                            'Error al cargar los datos. Por favor, intenta nuevamente.';
-            setError(errorMessage || 'Error al cargar los datos');
+            setError(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
+            console.error('Detalles del error:', err.response?.data); // Ya no necesitamos el OR ya que ya lo tenemos en la línea anterior
         setStatus('Error al cargar datos');
       }
     };
@@ -133,7 +148,7 @@ const Calendario = () => {
     setSelectedDate(date);
     try {
       setStatus('Cargando disponibilidad...');
-      const res = await axios.get(`http://localhost:8000/api/citas/disponibilidad?fecha=${date}`);
+      const res = await axiosInstance.get(`/api/citas/disponibilidad?fecha=${date}`);
       setDisponibilidad(res.data);
       setShowModal(true);
       setStatus('');
@@ -153,7 +168,7 @@ const Calendario = () => {
     const formData = new FormData(form);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/citas', {
+      const response = await axiosInstance.post('/api/citas', {
         fecha: selectedDate,
         hora: formData.get('hora'),
         id_servicio: formData.get('servicio'),

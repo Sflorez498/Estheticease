@@ -1,391 +1,418 @@
 // Variables de diseño
-$primary-color: #2ecc71;
-$secondary-color: #3498db;
-$error-color: #e74c3c;
-$success-color: #2ecc71;
-$warning-color: #f1c40f;
-$background-light: #f8f9fa;
-$border-radius: 12px;
-$spacing: 1rem;
-$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$primary-color: #4a7b93;
+$secondary-color: #6c8a9b;
+$error-color: #e8a87c;
+$success-color: #4a7b93;
+$warning-color: #f7dc6f;
+$background-light: #f5f7fa;
+$border-radius: 15px;
+$spacing: 1.25rem;
+$shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 
 .catalogo-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #ffffff;
-    border-radius: $border-radius;
-    box-shadow: $shadow;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8f1f2 100%);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  background-color: #ffffff;
 }
 
 h2 {
-    color: #333;
-    margin-bottom: 1.5rem;
-    text-align: center;
+  color: #3a5a6b;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .carrito-header {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 1000;
-    cursor: pointer;
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 50%;
+  padding: 0.5rem;
+  box-shadow: $shadow;
 }
 
 .cart-icon-header {
-    font-size: 1.5rem;
-    color: #2ecc71;
+  font-size: 1.8rem;
+  color: $primary-color;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $secondary-color;
+  }
 }
 
 .cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #e74c3c;
-    color: white;
-    border-radius: 50%;
-    padding: 0.2rem 0.5rem;
-    font-size: 0.8rem;
-    min-width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: $error-color;
+  color: white;
+  border-radius: 50%;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.9rem;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .carrito-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1001;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  backdrop-filter: blur(4px);
 }
 
 .carrito-modal-content {
-    background: white;
-    padding: $spacing * 2.5;
-    border-radius: $border-radius;
-    width: 90%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: $shadow;
+  background: white;
+  padding: #{ $spacing * 3 };
+  border-radius: $border-radius;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: $shadow;
+  border: 1px solid rgba(74, 123, 147, 0.1);
 }
 
 .carrito-header-modal {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: $spacing * 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: #{ $spacing * 2.5 };
+  border-bottom: 1px solid rgba(74, 123, 147, 0.1);
+  padding-bottom: #{ $spacing * 1.5 };
 
-    h3 {
-        margin: 0;
-        color: #2c3e50;
-        font-size: 1.8rem;
-        font-weight: 600;
-    }
+  h3 {
+    margin: 0;
+    color: $primary-color;
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
 }
 
 .close-icon {
-    font-size: 1.8rem;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: $spacing * 0.5;
+  font-size: 2rem;
+  color: $secondary-color;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: $spacing;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: $shadow;
 
-    &:hover {
-        color: $error-color;
-        transform: rotate(90deg);
-    }
+  &:hover {
+    background: rgba(74, 123, 147, 0.1);
+    color: $primary-color;
+    transform: rotate(90deg);
+  }
 }
 
 .carrito-items {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .carrito-item {
-    display: flex;
-    gap: $spacing;
-    padding: $spacing * 1.5;
-    background: $background-light;
-    border-radius: $border-radius;
-    margin-bottom: $spacing;
-    transition: all 0.3s ease;
+  display: flex;
+  gap: $spacing;
+  padding: #{ $spacing * 1.5 };
+  background: $background-light;
+  border-radius: $border-radius;
+  margin-bottom: $spacing;
+  transition: all 0.3s ease;
 
-    &:hover {
-        background: darken($background-light, 5%);
-        transform: translateX(5px);
-    }
+  &:hover {
+    background: darken($background-light, 5%);
+    transform: translateX(5px);
+  }
 }
 
 .carrito-item-image {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 5px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 .carrito-item-details {
-    flex: 1;
+  flex: 1;
 }
 
 .carrito-item-remove {
-    background: $error-color;
-    color: white;
-    border: none;
-    padding: $spacing * 0.75;
-    border-radius: $border-radius;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    min-width: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: $error-color;
+  color: white;
+  border: none;
+  padding: #{ $spacing * 0.75 };
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &:hover {
-        background: darken($error-color, 10%);
-        transform: scale(1.05);
-    }
+  &:hover {
+    background: darken($error-color, 10%);
+    transform: scale(1.05);
+  }
 }
 
 .carrito-total {
-    margin-top: $spacing * 3;
-    padding-top: $spacing * 2;
-    border-top: 2px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  margin-top: #{ $spacing * 3 };
+  padding-top: #{ $spacing * 2 };
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    h4 {
-        margin: 0;
-        font-size: 1.8rem;
-        color: #2c3e50;
-        font-weight: 600;
-    }
+  h4 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+}
+
+.carrito-limpiar,
+.carrito-pagar {
+  border: none;
+  padding: #{ $spacing * 0.75 } #{ $spacing * 2 };
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 .carrito-limpiar {
-    background: $error-color;
-    color: white;
-    border: none;
-    padding: $spacing * 0.75 $spacing * 2;
-    border-radius: $border-radius;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: $error-color;
+  color: white;
 
-    &:hover {
-        background: darken($error-color, 10%);
-        transform: scale(1.05);
-    }
+  &:hover {
+    background: darken($error-color, 10%);
+  }
 }
 
 .carrito-pagar {
-    background: $primary-color;
-    color: white;
-    border: none;
-    padding: $spacing * 0.75 $spacing * 2;
-    border-radius: $border-radius;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
-    min-width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: $spacing;
-    font-weight: 500;
+  background: $primary-color;
+  color: white;
+  margin-right: $spacing;
+  font-weight: 500;
 
-    &:hover {
-        background: darken($primary-color, 10%);
-        transform: scale(1.05);
-    }
+  &:hover {
+    background: darken($primary-color, 10%);
+  }
 }
 
 .carrito-vacio {
-    text-align: center;
-    color: #666;
-    padding: $spacing * 4;
-    font-size: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: $spacing * 2;
+  text-align: center;
+  color: #666;
+  padding: #{ $spacing * 4 };
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: #{ $spacing * 2 };
 
-    i {
-        font-size: 4rem;
-        color: $warning-color;
-    }
+  i {
+    font-size: 4rem;
+    color: $warning-color;
+  }
 }
 
 .productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: $spacing * 2;
-    list-style: none;
-    padding: 0;
-    margin-top: $spacing * 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: #{ $spacing * 2.5 };
+  list-style: none;
+  padding: 0;
+  margin-top: #{ $spacing * 4 };
 }
 
 .producto-item {
-    background: white;
-    border-radius: $border-radius;
-    padding: $spacing * 1.5;
-    box-shadow: $shadow;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: $border-radius;
+  padding: #{ $spacing * 2 };
+  box-shadow: $shadow;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(74, 123, 147, 0.1);
+  backdrop-filter: blur(4px);
 
-    &:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    }
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    border-color: rgba(74, 123, 147, 0.2);
+  }
 
-    &:hover .producto-boton {
-        background: darken($primary-color, 10%);
-    }
+  &:hover .producto-boton {
+    background: $primary-color;
+    transform: translateY(-2px);
+  }
 }
 
 .producto-imagen-container {
-    position: relative;
-    width: 100%;
-    height: 250px;
-    border-radius: $border-radius;
-    overflow: hidden;
-    margin-bottom: $spacing;
+  position: relative;
+  width: 100%;
+  height: 280px;
+  border-radius: $border-radius;
+  overflow: hidden;
+  margin-bottom: #{ $spacing * 1.5 };
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8f1f2 100%);
 
-    .imagen-loading {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(255, 255, 255, 0.9);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1;
-        transition: opacity 0.3s ease;
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid $background-light;
-            border-top: 4px solid $primary-color;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-    }
-
-    &:hover .imagen-loading {
-        opacity: 0;
-    }
-}
-
-.producto-imagen {
+  .imagen-loading {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: $border-radius;
-    transition: all 0.3s ease;
-    opacity: 0;
-    animation: fade-in 0.5s ease-out forwards;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    transition: opacity 0.3s ease;
 
-    &:hover {
-        transform: scale(1.05);
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid $primary-color;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
+  }
+
+  &:hover .imagen-loading {
+    opacity: 0;
+  }
+}
+
+.producto-imagen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: $border-radius;
+  transition: all 0.3s ease;
+  opacity: 0;
+  animation: fade-in 0.5s ease-out forwards;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .producto-nombre {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: $spacing;
-    line-height: 1.4;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: $primary-color;
+  margin-bottom: #{ $spacing * 1.2 };
+  line-height: 1.4;
+  letter-spacing: 0.5px;
 }
 
 .producto-descripcion {
-    color: #666;
-    margin-bottom: $spacing;
-    line-height: 1.6;
-    font-size: 0.95rem;
+  color: $secondary-color;
+  margin-bottom: #{ $spacing * 1.2 };
+  line-height: 1.6;
+  font-size: 1rem;
 }
 
 .modal-content {
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
 }
 
 .modal-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(74, 123, 147, 0.1);
 }
 
 .modal-title {
-    color: #2c3e50;
+  color: $primary-color;
 }
 
 .form-control {
-    border-radius: 5px;
-    padding: 0.5rem;
-    border: 1px solid #dee2e6;
-}
+  border-radius: $border-radius;
+  padding: $spacing;
+  border: 1px solid rgba(74, 123, 147, 0.1);
 
-.form-control:focus {
-    border-color: #2ecc71;
-    box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.2rem rgba(74, 123, 147, 0.25);
+  }
 }
 
 .producto-precio {
-    font-size: 1.2rem;
-    color: #2ecc71;
-    font-weight: bold;
-    margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: $primary-color;
+  font-weight: bold;
+  margin-bottom: #{ $spacing * 1.5 };
+  letter-spacing: 0.5px;
 }
 
 .producto-boton {
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    transition: background 0.2s ease-in-out;
+  background: $success-color;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  transition: background 0.2s ease-in-out;
 
-    &:hover {
-        background: #27ae60;
-    }
+  &:hover {
+    background: #27ae60;
+  }
 
-    .cart-icon {
-        font-size: 1.2rem;
-    }
+  .cart-icon {
+    font-size: 1.2rem;
+  }
 }
