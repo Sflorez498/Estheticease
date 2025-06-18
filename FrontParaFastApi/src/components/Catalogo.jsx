@@ -14,6 +14,8 @@ const obtenerTotalCarrito = (carrito) => {
 // Componente principal del catálogo
 const Catalogo = () => {
   const [loading, setLoading] = useState(true);  // Estado de carga
+  const [busqueda, setBusqueda] = useState('');  // Estado para el término de búsqueda
+  const [productosFiltrados, setProductosFiltrados] = useState(productos);  // Estado para productos filtrados
   const [mostrarCarrito, setMostrarCarrito] = useState(false);  // Estado del modal del carrito
   const [mostrarPago, setMostrarPago] = useState(false);  // Estado del modal de pago
   const [numeroTarjeta, setNumeroTarjeta] = useState('');  // Número de tarjeta para pago
@@ -94,6 +96,25 @@ const Catalogo = () => {
   };
 
   useEffect(() => {
+    // Filtrar productos según la búsqueda
+    const filtrarProductos = () => {
+      if (!busqueda) {
+        setProductosFiltrados(productos);
+        return;
+      }
+      
+      const termino = busqueda.toLowerCase();
+      const productosFiltrados = productos.filter(producto => 
+        producto.nombre_producto.toLowerCase().includes(termino) ||
+        producto.descripcion.toLowerCase().includes(termino)
+      );
+      setProductosFiltrados(productosFiltrados);
+    };
+
+    filtrarProductos();
+  }, [busqueda]);
+
+  useEffect(() => {
     setLoading(false);
   }, []);
 
@@ -107,6 +128,17 @@ const Catalogo = () => {
 
   return (
     <div className="catalogo-container">
+      {/* Barra de búsqueda */}
+      <div className="busqueda-container">
+          <input 
+            type="text" 
+            placeholder="Buscar productos..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="busqueda-input"
+          />
+      </div>
+
       {/* Carrito */}
       <div className="carrito-header">
         <FaShoppingCart 
@@ -215,48 +247,46 @@ const Catalogo = () => {
         </Modal.Body>
       </Modal>
 
-    {/* Catálogo */}
-    <h2>Nuestro Catálogo de Belleza</h2>
-    <ul className="productos-grid">
-      {productos.map(producto => (
-        <li key={producto.id_producto} className="producto-item">
-          <div className="producto-imagen-container">
-            <img 
-              src={producto.imagen_url} 
-              alt={producto.nombre_producto} 
-              className="producto-imagen"
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/250x250/cccccc/666666/?text=No+Image';
-              }}
-              style={{
-                width: '100%',
-                height: '250px',
-                objectFit: 'cover',
-                borderRadius: '12px',
-                transition: 'all 0.3s ease',
-                opacity: 0,
-                animation: 'fade-in 0.5s ease-out forwards'
-              }}
-            />
-            <div className="imagen-loading">
-              <div className="spinner"></div>
-            </div>
+      {/* Productos filtrados */}
+      <div className="productos-grid">
+        {productosFiltrados.length === 0 ? (
+          <div className="no-products-found">
+            <h3>No se encontraron productos</h3>
+            <p>Por favor, intenta con otra búsqueda</p>
           </div>
-          <h3 className="producto-nombre">{producto.nombre_producto}</h3>
-          <p className="producto-descripcion">{producto.descripcion}</p>
-          <span className="producto-precio">${producto.precio ? producto.precio.toLocaleString() : 'Precio no disponible'}</span>
-          <button 
-            className="producto-boton" 
-            onClick={() => agregarAlCarrito(producto)}
-          >
-            <FaShoppingCart className="cart-icon" />
-            Agregar al Carrito
-          </button>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+        ) : (
+          productosFiltrados.map(producto => (
+            <div key={producto.id_producto} className="producto-card">
+              <div className="producto-imagen-container">
+                <img 
+                  src={producto.imagen_url} 
+                  alt={producto.nombre_producto} 
+                  className="producto-imagen"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/250x250/cccccc/666666/?text=No+Image';
+                  }}
+                />
+                <div className="imagen-loading">
+                  <div className="spinner"></div>
+                </div>
+              </div>
+              <div className="producto-info">
+                <h3>{producto.nombre_producto}</h3>
+                <p>{producto.descripcion}</p>
+                <div className="precio">${producto.precio.toLocaleString()}</div>
+                <button 
+                  className="agregar-carrito"
+                  onClick={() => agregarAlCarrito(producto)}
+                >
+                  <FaShoppingCart /> Agregar al carrito
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default Catalogo;
