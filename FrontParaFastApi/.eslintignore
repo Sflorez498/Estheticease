@@ -1,0 +1,5 @@
+src/data/
+node_modules/
+build/
+.next/
+.cache/

@@ -7,10 +7,12 @@ import FormCargo from "./components/FormCargo";
 import Catalogo from "./components/Catalogo";
 import Calendario from "./components/Calendario";
 import Dashboard from "./components/Dashboard";
+import EditProfile from "./components/EditProfile";
 import Protegida from "./components/Protegida";
 import "./styles/estheticease.scss";
 import "./styles/calendario.scss";
 import "./styles/dashboard.scss";
+import "./styles/editProfile.scss";
 
 function App() {
   return (
@@ -40,6 +42,14 @@ function App() {
           element={
             <Protegida>
               <Calendario />
+            </Protegida>
+          }
+        />
+        <Route
+          path="/editar-perfil"
+          element={
+            <Protegida>
+              <EditProfile />
             </Protegida>
           }
         />
