@@ -1,17 +1,13 @@
-// Componente principal del Dashboard
-// Muestra las opciones principales disponibles para el usuario
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/dashboard.scss';
 import LogoutButton from './LogoutButton';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  // Obtener el ID del usuario desde localStorage
   const userId = localStorage.getItem('userId');
 
-  // Verificar si hay sesión activa
-  React.useEffect(() => {
+  useEffect(() => {
     if (!userId) {
       navigate('/login');
     }
@@ -19,32 +15,42 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      {/* Encabezado del dashboard */}
-      <div className="dashboard-header">
-        <h1>Bienvenido a Estheticease</h1>
-        <LogoutButton />  {/* Botón para cerrar sesión */}
-      </div>
-      {/* Contenedor de opciones */}
-      <div className="dashboard-options">
-        {/* Opción de Catálogo */}
-        <Link to="/catalogo" className="dashboard-card">
-          <div className="dashboard-icon">🛒</div>
-          <h2>Catálogo de Productos</h2>
-          <p>Explora y compra nuestros productos de belleza</p>
-        </Link>
-        {/* Opción de Calendario */}
-        <Link to="/calendario" className="dashboard-card">
-          <div className="dashboard-icon">📅</div>
-          <h2>Agendar Cita</h2>
-          <p>Reserva tu cita con nuestros servicios</p>
-        </Link>
-        {/* Opción de Editar Perfil */}
-        <Link to="/editar-perfil" className="dashboard-card">
-          <div className="dashboard-icon">👤</div>
-          <h2>Editar Perfil</h2>
-          <p>Actualiza tus datos personales</p>
-        </Link>
-      </div>
+      {/* Barra lateral con opciones */}
+      <aside className="sidebar">
+        <h2 className="sidebar-title">Estheticease</h2>
+
+        <nav className="sidebar-menu">
+          <Link to="/catalogo" className="sidebar-item">
+            <span className="icon">🛍️</span>
+            <span className="label">Catálogo</span>
+          </Link>
+
+          <Link to="/calendario" className="sidebar-item">
+            <span className="icon">💆‍♀️</span>
+            <span className="label">Agendar Cita</span>
+          </Link>
+
+          <Link to="/editar-perfil" className="sidebar-item">
+            <span className="icon">👤</span>
+            <span className="label">Editar Perfil</span>
+          </Link>
+        </nav>
+
+        <div className="logout-section">
+          <LogoutButton />
+        </div>
+      </aside>
+
+      {/* Contenido principal con bienvenida */}
+      <main className="main-content">
+        <section className="welcome-box">
+          <h1>¡Bienvenida a Estheticease!</h1>
+          <p>
+            Hoy es un buen día para consentirte 🌸 <br />
+            Disfruta de nuestros productos y servicios pensados para tu bienestar.
+          </p>
+        </section>
+      </main>
     </div>
   );
 };
