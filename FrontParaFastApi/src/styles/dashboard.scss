@@ -4,13 +4,12 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
-  background-color: #fffaf5;
   color: #4a4a4a;
 }
 
 // === Barra lateral con menú ===
 .sidebar {
-  width: 220px;
+  width: 160px;
   background-color: #ffffff;
   padding: 2rem 1.5rem;
   border-right: 1px solid #eee;
@@ -66,20 +65,23 @@
 .main-content {
   flex: 1;
   padding: 4rem;
-  background-color: #fffaf5;
-  background-image: url("https://www.transparenttextures.com/patterns/pw-maze-white.png"); // fondo decorativo sutil
-  background-size: auto;
-  border-top-left-radius: 2rem;
-  border-bottom-left-radius: 2rem;
+  background-image: url("https://www.akrahotels.com/media/4oigfkxr/akra-fethiye-spa-card.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .welcome-box {
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.85); // blanco semitransparente
     border-radius: 1.5rem;
     padding: 2.5rem 3rem;
-    box-shadow: 0 8px 24px rgba(212, 177, 177, 0.15);
+    box-shadow: 0 8px 24px rgba(212, 177, 177, 0.25);
     text-align: center;
     max-width: 800px;
-    margin: 0 auto;
+    margin: auto;
 
     h1 {
       font-family: 'Playfair Display', serif;
@@ -90,8 +92,9 @@
 
     p {
       font-size: 1.2rem;
-      color: #6e6e6e;
+      color: #555;
       line-height: 1.6;
     }
   }
 }
+
