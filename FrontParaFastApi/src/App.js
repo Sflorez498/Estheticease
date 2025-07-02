@@ -10,7 +10,7 @@ import Dashboard from "./components/Dashboard";
 import EditProfile from "./components/EditProfile";
 import Protegida from "./components/Protegida";
 import "./styles/estheticease.scss";
-import "./styles/calendario.scss";
+import "./styles/Calendario.scss";
 import "./styles/dashboard.scss";
 import "./styles/editProfile.scss";
 

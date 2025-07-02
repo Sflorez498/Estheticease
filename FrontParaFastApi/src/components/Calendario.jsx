@@ -1,190 +1,291 @@
-// Componente que muestra el calendario de citas
 import React, { useState, useEffect } from 'react';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format, parse, startOfWeek, getDay } from 'date-fns';
-import es from 'date-fns/locale/es';
+import { Calendar, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../styles/calendario.scss';
+import { format, parse, addDays, endOfDay } from 'date-fns';
+import es from 'date-fns/locale/es';
+import '../styles/Calendario.scss';
 
-// Configuración de la localización para el calendario en español
-const locales = {
-  es: es,
+// Configurar el localizador de date-fns
+const localizer = {
+  formats: {
+    dateFormat: 'dd/MM/yyyy',
+    dayFormat: 'dd',
+    weekdayFormat: 'EEEE',
+    monthFormat: 'MMMM',
+    monthHeaderFormat: 'MMMM yyyy',
+    dayHeaderFormat: 'dd',
+    dayOfMonthFormat: 'dd',
+    timeGutterFormat: 'HH:mm'
+  },
+  format: (date, formatString, culture, localizer) => {
+    return format(date, formatString, { locale: es });
+  },
+  parse: (dateString, formatString, culture, localizer) => {
+    return parse(dateString, formatString, new Date(), { locale: es });
+  },
+  startOfWeek: () => 0, // Domingo como primer día de la semana
+  getDay: date => date.getDay(),
+  firstVisibleDay: ({ date }) => date,
+  lastVisibleDay: ({ date }) => date,
+  navigate: (date, action) => {
+    const addFn = {
+      PREVIOUS: 'subDays',
+      NEXT: 'addDays',
+      TODAY: () => new Date(),
+    }[action];
+    return addFn ? addFn(date, 1) : date;
+  },
+  range: (start, end) => Array.from({ length: end - start }, (_, i) => addDays(start, i)),
+  endOf: (date, unit) => {
+    if (unit === 'day') return endOfDay(date);
+    return date;
+  },
+  add: (date, number) => addDays(date, number),
+  neq: (date1, date2) => date1.getTime() !== date2.getTime(),
+  eq: (date1, date2) => date1.getTime() === date2.getTime(),
+  lt: (date1, date2) => date1.getTime() < date2.getTime(),
+  lte: (date1, date2) => date1.getTime() <= date2.getTime(),
+  gt: (date1, date2) => date1.getTime() > date2.getTime(),
+  gte: (date1, date2) => date1.getTime() >= date2.getTime(),
+  inRange: (date, min, max) => date.getTime() >= min.getTime() && date.getTime() <= max.getTime(),
+  merge: (date1, date2) => new Date(date1.getFullYear(), date1.getMonth(), date1.getDate(),
+    date2.getHours(), date2.getMinutes(), date2.getSeconds(), date2.getMilliseconds()),
 };
 
-// Localizer para manejar fechas en español
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
-  getDay,
-  locales,
-});
+function Calendario({ userId }) {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [servicios, setServicios] = useState([]);
+  const [empleados, setEmpleados] = useState([]);
+  const [disponibilidad, setDisponibilidad] = useState([]);
 
-// Componente principal del calendario
-const Calendario = () => {
-  const navigate = useNavigate();
-  const [events, setEvents] = useState([]);  // Eventos/citas del calendario
-  const [selectedDate, setSelectedDate] = useState(null);  // Fecha seleccionada
-  const [showModal, setShowModal] = useState(false);  // Estado del modal
-  const [modalContent, setModalContent] = useState('');  // Contenido del modal
-  const [servicios, setServicios] = useState([]);  // Lista de servicios disponibles
-  const [empleados, setEmpleados] = useState([]);  // Lista de empleados
-  const [disponibilidad, setDisponibilidad] = useState([]);  // Disponibilidad de empleados
-
-  // Efecto que se ejecuta al montar el componente
+  // Obtener servicios al cargar
   useEffect(() => {
-    // Obtener servicios disponibles
     axios.get('http://localhost:8000/api/servicios')
-      .then(res => setServicios(res.data))
-      .catch(err => console.error('Error al obtener servicios:', err));
+      .then(res => {
+        setServicios(res.data);
+      })
+      .catch(err => {
+        console.error('Error al obtener servicios:', err);
+      });
+  }, []);
 
-    // Obtener empleados disponibles
-    axios.get('http://localhost:8000/api/empleados')
-      .then(res => setEmpleados(res.data))
-      .catch(err => console.error('Error al obtener empleados:', err));
+  // Obtener empleados al cargar
+  useEffect(() => {
+    axios.get('http://localhost:8000/api/empleado')
+      .then(res => {
+        setEmpleados(res.data);
+      })
+      .catch(err => {
+        console.error('Error al obtener empleados:', err);
+      });
+  }, []);
 
-    // Obtener citas del usuario actual
-    const userId = localStorage.getItem('userId');
+  // Obtener citas del usuario
+  useEffect(() => {
     if (userId) {
       axios.get(`http://localhost:8000/api/citas/cliente/${userId}`)
         .then(res => {
-          // Convertir las citas al formato del calendario
           const citas = res.data.map(cita => ({
-            title: cita.nombre_servicio,  // Título del evento
-            start: new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`),  // Fecha de inicio
-            end: new Date(new Date(`${format(new Date(cita.Fecha), 'yyyy-MM-dd')}T${format(new Date(cita.Hora), 'HH:mm')}`).getTime() + 30 * 60000),  // Fecha de fin (30 minutos después)
-            allDay: false,  // No es un evento de todo el día
-            id: cita.Id_Cita  // ID de la cita
+            title: `${cita.nombre_servicio} - ${cita.nombre_empleado}`,
+            start: new Date(`${cita.fecha}T${cita.hora}:00`),
+            end: new Date(new Date(`${cita.fecha}T${cita.hora}:00`).getTime() + 30 * 60000),
+            allDay: false,
+            id: cita.id_cita,
+            estado: cita.estado,
+            empleado: cita.nombre_empleado,
+            servicio: cita.nombre_servicio,
+            color: cita.estado === 'Pendiente' ? '#4CAF50' : 
+                   cita.estado === 'Confirmada' ? '#2196F3' : 
+                   cita.estado === 'Cancelada' ? '#F44336' : 
+                   '#8BC34A'
           }));
           setEvents(citas);
+          setLoading(false);
         })
-        .catch(err => console.error('Error al obtener citas:', err));
+        .catch(err => {
+          setError('Error al cargar las citas');
+          setLoading(false);
+          console.error('Error detallado:', err);
+        });
     }
-  }, [navigate]);
+  }, [userId]);
 
-  // Manejador para seleccionar un slot en el calendario
+  // Manejar selección de slot
   const handleSelectSlot = (slotInfo) => {
     const date = format(slotInfo.start, 'yyyy-MM-dd');
+    
+    // Verificar si la fecha es válida
+    if (new Date(date) < new Date()) {
+      alert('No se pueden programar citas en fechas pasadas');
+      return;
+    }
+
+    // Obtener disponibilidad
     axios.get(`http://localhost:8000/api/citas/disponibilidad?fecha=${date}`)
       .then(res => {
         setDisponibilidad(res.data);
         setSelectedDate(date);
         setShowModal(true);
-
-        const modalHTML = `
-          <form id="citaForm">
-            <label>Servicio:
-              <select name="servicio" required>
-                <option value="">Selecciona</option>
-                ${servicios.map(s => `<option value="${s.id_servicio}">${s.nombre}</option>`).join('')}
-              </select>
-            </label>
-            <label>Profesional:
-              <select name="empleado" required>
-                <option value="">Selecciona</option>
-                ${empleados.map(e => `<option value="${e.id_empleado}">${e.nombre} (${e.especialidad})</option>`).join('')}
-              </select>
-            </label>
-            <label>Hora:
-              <select name="hora" required>
-                <option value="">Selecciona</option>
-                ${res.data.map(d => `<option value="${format(new Date(d.hora), 'HH:mm')}">${format(new Date(d.hora), 'HH:mm')}</option>`).join('')}
-              </select>
-            </label>
-            <label>Notas:
-              <textarea name="notas" placeholder="Notas opcionales..."></textarea>
-            </label>
-            <button type="submit">Reservar</button>
-          </form>`;
-        setModalContent(modalHTML);
       })
-      .catch(err => console.error('Error al obtener disponibilidad:', err));
+      .catch(err => {
+        setError('Error al obtener disponibilidad');
+        console.error('Error detallado:', err);
+      });
   };
 
-  const handleModalSubmit = (e) => {
+  // Manejar envío de cita
+  const handleSubmitCita = (e) => {
     e.preventDefault();
-    const form = e.target;
-    const servicio = form.servicio.value;
-    const empleado = form.empleado.value;
-    const hora = form.hora.value;
-    const notas = form.notas.value;
+    const formData = new FormData(e.target);
+    const citaData = {
+      id_cliente: userId,
+      id_servicio: formData.get('servicio'),
+      id_empleado: formData.get('empleado'),
+      fecha: `${selectedDate}T${formData.get('hora')}:00`,
+      estado: 'Pendiente',
+      notas: formData.get('notas')
+    };
 
-    if (!servicio || !empleado || !hora) {
-      alert('Completa todos los campos');
-      return;
-    }
-
-    axios.post('http://localhost:8000/api/citas', {
-      id_cliente: localStorage.getItem('userId'),
-      id_empleado: parseInt(empleado),
-      id_servicio: parseInt(servicio),
-      fecha: format(new Date(selectedDate), 'yyyy-MM-dd'),
-      hora: format(new Date(hora), 'HH:mm'),
-      notas
-    })
-    .then(() => {
-      setShowModal(false);
-      const servicioNombre = servicios.find(s => s.id_servicio === parseInt(servicio))?.nombre || 'Cita';
-      setEvents([...events, {
-        title: servicioNombre,
-        start: new Date(`${format(new Date(selectedDate), 'yyyy-MM-dd')}T${format(new Date(hora), 'HH:mm')}`),
-        end: new Date(new Date(`${format(new Date(selectedDate), 'yyyy-MM-dd')}T${format(new Date(hora), 'HH:mm')}`).getTime() + 30 * 60000),
-        allDay: false
-      }]);
-      alert('Cita reservada');
-    })
-    .catch(err => {
-      console.error('Error al reservar:', err);
-      alert('Error al reservar la cita');
-    });
+    axios.post('http://localhost:8000/api/citas', citaData)
+      .then(res => {
+        setShowModal(false);
+        // Actualizar citas en el calendario
+        axios.get(`http://localhost:8000/api/citas/cliente/${userId}`)
+          .then(res => {
+            const citas = res.data.map(cita => ({
+              title: `${cita.nombre_servicio} - ${cita.nombre_empleado}`,
+              start: new Date(`${cita.fecha}T${cita.hora}:00`),
+              end: new Date(new Date(`${cita.fecha}T${cita.hora}:00`).getTime() + 30 * 60000),
+              allDay: false,
+              id: cita.id_cita,
+              estado: cita.estado,
+              empleado: cita.nombre_empleado,
+              servicio: cita.nombre_servicio,
+              color: cita.estado === 'Pendiente' ? '#4CAF50' : 
+                     cita.estado === 'Confirmada' ? '#2196F3' : 
+                     cita.estado === 'Cancelada' ? '#F44336' : 
+                     '#8BC34A'
+            }));
+            setEvents(citas);
+          });
+        alert('Cita reservada exitosamente');
+      })
+      .catch(err => {
+        setError('Error al reservar la cita');
+        console.error('Error detallado:', err);
+      });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userId');
-    navigate('/');
+  // Manejar cierre del modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setDisponibilidad([]);
+    setSelectedDate('');
   };
+
+  // Mostrar mensaje si no hay userId
+  if (!userId) {
+    return (
+      <div className="calendar-container">
+        <div className="error">Por favor, inicia sesión para ver tu calendario</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="calendario-container">
-      <div className="header-container">
-        <h2>Agenda de Citas</h2>
-        <button className="btn-cerrar-sesion" onClick={handleLogout}>Cerrar Sesión</button>
-      </div>
-
+    <div className="calendar-container">
+      {loading && <div className="loading">Cargando...</div>}
+      {error && <div className="error">{error}</div>}
+      
       <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        selectable
-        style={{ height: 500 }}
+        views={['month', 'week', 'day']}
         onSelectSlot={handleSelectSlot}
-        views={['month', 'week', 'day', 'agenda']}
-        defaultView="month"
+        selectable
+        culture="es"
+        defaultView={Views.MONTH}
         defaultDate={new Date()}
-        messages={{
-          next: 'Siguiente',
-          previous: 'Anterior',
-          today: 'Hoy',
-          month: 'Mes',
-          week: 'Semana',
-          day: 'Día',
-          agenda: 'Agenda'
+        style={{ height: 600 }}
+        components={{
+          event: ({ event }) => (
+            <div style={{ backgroundColor: event.color }} className="event">
+              {event.title}
+            </div>
+          )
         }}
       />
 
       {showModal && (
         <div className="modal">
           <div className="modal-content">
-            <h3>Nueva Cita</h3>
-            <div onSubmit={handleModalSubmit} dangerouslySetInnerHTML={{ __html: modalContent }} />
+            <h2>Reservar Cita</h2>
+            <form onSubmit={handleSubmitCita}>
+              <div className="form-group">
+                <label>Fecha:</label>
+                <input type="text" value={selectedDate} disabled />
+              </div>
+
+              <div className="form-group">
+                <label>Servicio:</label>
+                <select name="servicio" required>
+                  <option value="">Selecciona un servicio</option>
+                  {servicios.map(servicio => (
+                    <option key={servicio.id_servicio} value={servicio.id_servicio}>
+                      {servicio.nombre} - {servicio.duracion} min - ${servicio.precio}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Profesional:</label>
+                <select name="empleado" required>
+                  <option value="">Selecciona un profesional</option>
+                  {empleados.map(empleado => (
+                    <option key={empleado.id_empleado} value={empleado.id_empleado}>
+                      {empleado.nombre} - {empleado.especialidad}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Hora:</label>
+                <select name="hora" required>
+                  <option value="">Selecciona una hora</option>
+                  {disponibilidad.map(hora => (
+                    <option key={hora.hora} value={hora.hora}>
+                      {hora.hora}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Notas:</label>
+                <textarea name="notas" placeholder="Notas opcionales..." rows="3"></textarea>
+              </div>
+
+              <div className="form-buttons">
+                <button type="submit" className="btn-reservar">Reservar Cita</button>
+                <button type="button" onClick={handleCloseModal} className="btn-cancelar">
+                  Cancelar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default Calendario;

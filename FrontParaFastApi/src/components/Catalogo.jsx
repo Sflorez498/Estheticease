@@ -4,15 +4,30 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { FaTimes } from 'react-icons/fa';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import '../styles/Catalogo.scss';
+// Componente Catalogo: Gestiona el catálogo de productos y el carrito de compras
+// Este componente proporciona la interfaz para ver productos y realizar compras
+
+// Importaciones necesarias
 import { productos } from '../data/productos';
 
 // Función auxiliar para calcular el total del carrito
+// Recibe un array de productos y devuelve el total de la compra
 const obtenerTotalCarrito = (carrito) => {
   return carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0);
 };
 
 // Componente principal del catálogo
 const Catalogo = () => {
+  // Estados del componente:
+  // loading: Estado de carga mientras se cargan los productos
+  // busqueda: Término de búsqueda ingresado por el usuario
+  // productosFiltrados: Lista de productos que coinciden con la búsqueda
+  // mostrarCarrito: Controla la visibilidad del modal del carrito
+  // mostrarPago: Controla la visibilidad del modal de pago
+  // numeroTarjeta: Número de tarjeta ingresado para el pago
+  // clave: Clave de la tarjeta para el pago
+  // errorPago: Mensaje de error durante el proceso de pago
+  // exitoPago: Estado que indica si el pago fue exitoso
   const [loading, setLoading] = useState(true);  // Estado de carga
   const [busqueda, setBusqueda] = useState('');  // Estado para el término de búsqueda
   const [productosFiltrados, setProductosFiltrados] = useState(productos);  // Estado para productos filtrados
@@ -23,12 +38,16 @@ const Catalogo = () => {
   const [errorPago, setErrorPago] = useState('');  // Mensaje de error en pago
   const [exitoPago, setExitoPago] = useState(false);  // Estado de éxito en pago
 
-  // Obtener carrito del localStorage
+  // Obtener carrito del localStorage:
   // Si no existe, se inicializa como un array vacío
+  // El carrito se persiste entre sesiones para mantener los productos seleccionados
   const carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
-  // Calcular total de items en el carrito
+  // Calcular total de items en el carrito:
+  // Suma la cantidad de todos los productos en el carrito
   const totalItems = carrito.reduce((total, item) => total + item.cantidad, 0);
 
+  // Función para agregar un producto al carrito
+  // Recibe un producto y lo agrega o actualiza en el carrito
   const agregarAlCarrito = (producto) => {
     // Obtener el carrito actual del localStorage
     let carrito = JSON.parse(localStorage.getItem('carrito') || '[]');
@@ -37,20 +56,20 @@ const Catalogo = () => {
     const productoExistente = carrito.find(p => p.id_producto === producto.id_producto);
     
     if (productoExistente) {
-      // Si existe, aumentar la cantidad
+      // Si existe, incrementar la cantidad en 1
       productoExistente.cantidad += 1;
     } else {
-      // Si no existe, agregar con cantidad 1
+      // Si no existe, agregar el producto con cantidad 1
       carrito.push({
         ...producto,
         cantidad: 1
       });
     }
     
-    // Guardar el carrito actualizado
+    // Guardar el carrito actualizado en localStorage
     localStorage.setItem('carrito', JSON.stringify(carrito));
     
-    // Mostrar mensaje de éxito
+    // Mostrar mensaje de éxito al usuario
     alert('Producto agregado al carrito');
   };
 
