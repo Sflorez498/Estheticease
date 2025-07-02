@@ -18,101 +18,117 @@ const Home = () => {
           <li onClick={() => navigate("/login")}>Login</li>
         </ul>
       </div>
+{/* Hero */}
+<section
+  className="hero"
+  style={{
+    position: "relative",
+    backgroundImage: "url('https://i.pinimg.com/736x/4f/ac/6a/4fac6a5b2f1d11667644f8d99b498d6a.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    height: "70vh",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+    padding: "0 20px",
+    zIndex: 1,
+    overflow: "hidden"
+  }}
+>
+  {/* Overlay semitransparente */}
+  <div
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.4)", // Cambia a rgba(255, 255, 255, 0.4) si prefieres blanquear
+      zIndex: 0
+    }}
+  />
 
-      {/* Hero */}
-      <section className="hero" style={{
-        backgroundImage: "url('https://i.pinimg.com/736x/4f/ac/6a/4fac6a5b2f1d11667644f8d99b498d6a.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "70vh",
-        color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        padding: "0 20px"
-      }}>
-        <h1 style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>Relájate y Renueva Tu Belleza</h1>
-        <p style={{ fontSize: "1.2rem", maxWidth: "600px", marginBottom: "1.5rem" }}>
-          Descubre nuestros tratamientos personalizados para cuidar tu cuerpo y mente.
-        </p>
-        <button
-          style={{
-            padding: "1rem 2rem",
-            fontSize: "1rem",
-            borderRadius: "30px",
-            border: "none",
-            backgroundColor: "#ff7e5f",
-            color: "#fff",
-            cursor: "pointer"
-          }}
-          onClick={() => navigate("/login")}
-        >
-          Agenda tu cita ahora
-        </button>
-      </section>
+  {/* Contenido encima del overlay */}
+  <div style={{ zIndex: 1 }}>
+    <h1 style={{ fontSize: "4rem", marginBottom: "1.5rem" }}>
+      Relájate y Renueva Tu Belleza
+    </h1>
+    <p
+      style={{
+        fontSize: "1.5rem",
+        maxWidth: "800px",
+        marginBottom: "2.5rem"
+      }}
+    >
+      Descubre nuestros tratamientos personalizados para cuidar tu cuerpo y mente.
+    </p>
+  </div>
+</section>
+
 
       {/* Servicios */}
       <section className="servicios" style={{ padding: "40px 20px", backgroundColor: "#f9f9f9" }}>
-        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>Nuestros Servicios</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "4rem" }}>Nuestros Servicios</h2>
         <div className="cards" style={{
           display: "flex",
           justifyContent: "center",
-          gap: "20px",
+          gap: "60px",
           flexWrap: "wrap"
         }}>
           {/* Card 1 */}
           <div className="card" style={{
             backgroundColor: "#fff",
-            borderRadius: "10px",
+            borderRadius: "20px",
             boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
             maxWidth: "300px",
-            padding: "20px",
+            padding: "50px",
             textAlign: "center"
           }}>
             <img
               src="https://dulcefiguraspa.com/wp-content/uploads/2024/01/img-5-tipos-de-masajes-relajante-1.webp"
               alt="Masaje relajante"
-              style={{ borderRadius: "10px", width: "100%", height: "180px", objectFit: "cover" }}
+              style={{ borderRadius: "20px", width: "110%", height: "190px", objectFit: "cover" }}
             />
-            <h3 style={{ marginTop: "15px" }}>Masajes Relajantes</h3>
+            <h3 style={{ marginTop: "30px" }}>Masajes Relajantes</h3>
             <p>Alivia el estrés y mejora tu bienestar.</p>
           </div>
 
           {/* Card 2 */}
           <div className="card" style={{
             backgroundColor: "#fff",
-            borderRadius: "10px",
+            borderRadius: "20px",
             boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
             maxWidth: "300px",
-            padding: "20px",
+            padding: "50px",
             textAlign: "center"
           }}>
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB-QFGPa82ZddLOwn7fsL0PaTyICe8_HfjCQ&s"
               alt="Faciales"
-              style={{ borderRadius: "10px", width: "100%", height: "180px", objectFit: "cover" }}
+              style={{ borderRadius: "20px", width: "110%", height: "190px", objectFit: "cover" }}
             />
-            <h3 style={{ marginTop: "15px" }}>Faciales</h3>
+            <h3 style={{ marginTop: "30px" }}>Faciales</h3>
             <p>Restaura la frescura y vitalidad de tu rostro.</p>
           </div>
 
           {/* Card 3 */}
           <div className="card" style={{
             backgroundColor: "#fff",
-            borderRadius: "10px",
+            borderRadius: "20px",
             boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
             maxWidth: "300px",
-            padding: "20px",
+            padding: "50px",
             textAlign: "center"
           }}>
             <img
               src="https://aromaticosdeoccidente.com/wp-content/uploads/2021/09/Cuidado-corporal.jpg"
               alt="Cuidado corporal"
-              style={{ borderRadius: "10px", width: "100%", height: "180px", objectFit: "cover" }}
+              style={{ borderRadius: "20px", width: "110%", height: "190px", objectFit: "cover" }}
             />
-            <h3 style={{ marginTop: "15px" }}>Cuidado Corporal</h3>
+            <h3 style={{ marginTop: "30px" }}>Cuidado Corporal</h3>
             <p>Tratamientos integrales para una piel radiante.</p>
           </div>
         </div>
@@ -153,39 +169,57 @@ const Home = () => {
         </div>
       </section>
 
-      <section style={{ padding: "40px 20px", backgroundColor: "#fff", textAlign: "center" }}>
-        <h2>Suscríbete a nuestro boletín</h2>
-        <p>Recibe promociones exclusivas y consejos de belleza directamente en tu correo.</p>
-        <form style={{ marginTop: "20px" }}>
-          <input type="email" placeholder="Tu correo electrónico" style={{
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-            width: "300px",
-            marginRight: "10px"
-          }} />
-          <button style={{
-            padding: "10px 20px",
-            backgroundColor: "#ff7e5f",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer"
-          }}>
-            Suscribirme
-          </button>
-        </form>
-      </section>
+      <section
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "40px 20px",
+    backgroundColor: "#fff",
+    textAlign: "left"
+  }}
+>
+  {/* Imagen a la izquierda */}
+  <div style={{ flex: 1 }}>
+    <img
+      src="https://bethelspa.com/inicio/wp-content/uploads/2023/11/WEB_IMAGENES_amigas-02.jpg" // Reemplaza con tu imagen real
+      alt="Promoción spa"
+      style={{ width: "100%", borderRadius: "10px" }}
+    />
+  </div>
 
-      {/* Footer */}
-      <footer style={{
-        backgroundColor: "#f7c6c7",
-        padding: "20px",
-        textAlign: "center",
-        fontSize: "0.9rem"
-      }}>
-        
-      </footer>
+  {/* Formulario a la derecha */}
+  <div style={{ flex: 2, paddingLeft: "200px" }}>
+    <h2>Suscríbete a nuestro boletín</h2>
+    <p>Recibe promociones exclusivas y consejos de belleza directamente en tu correo.</p>
+
+    <form style={{ marginTop: "60px", display: "flex", alignItems: "center" }}>
+      <input
+        type="email"
+        placeholder="Tu correo electrónico"
+        style={{
+          padding: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+          width: "300px",
+          marginRight: "10px"
+        }}
+      />
+      <button
+        style={{
+          padding: "10px 20px", /*boton de suscribirse*/
+          backgroundColor: "#ff7e5f",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer"
+        }}
+      >
+        Suscribirme
+      </button>
+    </form>
+  </div>
+</section>
     
 
 

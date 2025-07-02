@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/estheticease.scss';
+import { API_BASE_URL } from '../config/api';
 
 const FormCargo = () => {
   const navigate = useNavigate();
@@ -20,13 +21,15 @@ const FormCargo = () => {
     };
 
     try {
-      const response = await axios.post("http://localhost:8000/api/clientes", nuevoCliente);
+      const response = await axios.post(`${API_BASE_URL}/api/clientes`, nuevoCliente);
       console.log("Respuesta del servidor:", response.data);
       alert("Cliente registrado correctamente");
       form.reset();
     } catch (error) {
       console.error("Error completo:", error);
-      const errorMessage = error.response?.data?.detail || "Error al registrar cliente";
+      const errorMessage = error.response?.data?.detail || 
+        error.message || 
+        "No se pudo conectar con el servidor. Por favor, verifique que el servidor FastAPI está corriendo.";
       alert(errorMessage);
     }
   };
