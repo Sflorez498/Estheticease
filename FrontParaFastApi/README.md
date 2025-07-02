@@ -73,5 +73,6 @@ Estheticease/
 
 ## 📫 Contacto
 - Autor: GeralSilva
+Cristian Florez
 - 📧 Email: geraldine_basto@gmail.com
 
