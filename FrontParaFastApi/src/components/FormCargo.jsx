@@ -50,7 +50,7 @@ const FormCargo = () => {
         withCredentials: true
       };
 
-      const response = await axios.post("http://localhost:8000/api/clientes", nuevoCliente, config);
+      const response = await axios.post("http://localhost:3000/api/clientes", nuevoCliente, config);
       console.log("Respuesta del servidor:", response.data);
 
       navigate('/login', { 
